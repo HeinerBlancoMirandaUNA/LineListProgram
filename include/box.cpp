@@ -5,20 +5,19 @@ Box::Box() {
 	line.setSize(sf::Vector2f(1, 20));
 	x = 0;
 	y = 0;
-	xSize = 0;
-	ySize = 0;
-	type = 0;
+	button("");
 	font.loadFromFile("resources/LessPerfectDOSVGA.ttf");
 	text.setFont(font);
 	text.setCharacterSize(16);
-	label = "";
+	pressedColor = biselB;
+	
 }
 Box::~Box() {
 
 }
 
-int Box::labelWitdh() {
-	return static_cast<unsigned int>((label.length() * 8) + 10);
+float Box::labelWidth() {
+	return (static_cast<float>(label.length()) * 8) + 10;
 }
 
 int Box::characterLimit() {
@@ -26,42 +25,120 @@ int Box::characterLimit() {
 	return static_cast<int>((xSize - 10) / 8);
 }
 
-void Box::draw(sf::RenderWindow& window) {
+void Box::button(std::string thisLabel) {
+	autoAdjust = true;
+	biselEnable = true;
+	biselPressed = false;
+	hoverSelect = false;
+	label = thisLabel;
+	xSize = labelWidth() + 25;
+	ySize = 24;
+}
 
-	sf::Color biselA(255, 255, 255);
-	sf::Color biselB(195, 195, 195);
-	sf::Color biselC(128, 128, 128);
-	sf::Color biselD(0, 0, 0);
-	sf::Color selected(0, 0, 130);
+void Box::inputField(std::string thisLabel) {
+	autoAdjust = false;
+	biselEnable = true;
+	biselPressed = true; 
+	hoverSelect = false;
+	label = thisLabel;
+	ySize = 24;
+}
 
-	rectangle.setFillColor(biselB);
-	rectangle.setPosition(sf::Vector2f(x, y));
-	rectangle.setSize(sf::Vector2f(xSize, ySize));
-	window.draw(rectangle);
+void Box::setPressedColor(int red, int green, int blue) {
 
-	line.setFillColor(biselD);
+	pressedColor = sf::Color(red, green, blue);
+
+}
+
+void Box::press() {
+	biselPressed = true;
+}
+
+void Box::release() {
+	biselPressed = false;
+}
+
+void Box::adjustText() {
+	text.setPosition(x + 5, y);
+	labelToDisplay = label;
+	if (label.length() > characterLimit()) {
+		if (characterLimit() < 1) { labelToDisplay = ""; return; }
+		labelToDisplay = char(17) + (label.substr(label.length() + 1 - characterLimit(), label.length()));
+	}
+	else {
+		if (!autoAdjust) { return; }
+		float adjust = xSize - labelWidth();
+		adjust = adjust / 2; // don't divide by 2 to adjust to the right
+		adjust = adjust;
+		text.move(std::round(adjust), 0);
+	}
+}
+
+void Box::drawBisel(sf::RenderWindow& window) {
+
+	sf::Color upperSide = biselA; 
+	sf::Color lowerSide = biselD;
+	sf::Color middleShadow = biselC;
+
+	if (biselPressed) {
+		upperSide = biselD;
+		lowerSide = biselB;
+		middleShadow = biselA;
+	}
+
+	line.setFillColor(lowerSide);
 	line.setPosition(sf::Vector2f(x, (y + ySize) - 1));
 	line.setSize(sf::Vector2f(xSize, 1)); window.draw(line);
 	line.setPosition(sf::Vector2f((x + xSize) - 1, y + 1));
 	line.setSize(sf::Vector2f(1, ySize - 1)); window.draw(line);
 
-	line.setFillColor(biselC);
-	line.setPosition(sf::Vector2f(x + 1, (y + (ySize-2))));
+	line.setFillColor(middleShadow);
+	line.setPosition(sf::Vector2f(x + 1, (y + (ySize - 2))));
 	line.setSize(sf::Vector2f(xSize - 2, 1)); window.draw(line);
 	line.setPosition(sf::Vector2f((x + xSize) - 2, y + 1));
 	line.setSize(sf::Vector2f(1, ySize - 2)); window.draw(line);
 
-	line.setFillColor(biselA);
+	line.setFillColor(upperSide);
 	line.setPosition(sf::Vector2f(x + 1, y + 1));
-	line.setSize(sf::Vector2f(xSize-2, 1)); window.draw(line);
+	line.setSize(sf::Vector2f(xSize - 2, 1)); window.draw(line);
 	line.setSize(sf::Vector2f(1, ySize - 3)); window.draw(line);
+	line.setPosition(sf::Vector2f(x, y));
+	line.setSize(sf::Vector2f(xSize, 1)); window.draw(line);
+	line.setSize(sf::Vector2f(1, ySize-1)); window.draw(line);
 
-	std::string labelToDisplay = label;
-	if (label.length() > characterLimit()) {
-		labelToDisplay = label.substr(label.length()-characterLimit(), label.length());
+	if (!biselPressed) { return; }
+
+	line.setFillColor(biselC);
+	line.move(2, 2); 
+	line.setSize(sf::Vector2f(1, ySize - 4)); window.draw(line);
+	line.setSize(sf::Vector2f(xSize - 4, 1));	window.draw(line);
+
+}
+
+void Box::draw(sf::RenderWindow& window) {
+
+	rectangle.setFillColor(biselB);
+	if (biselPressed) { rectangle.setFillColor(pressedColor); }
+	rectangle.setPosition(sf::Vector2f(x, y));
+	rectangle.setSize(sf::Vector2f(xSize, ySize));
+	window.draw(rectangle);
+
+	if (biselEnable) {
+		drawBisel(window);
 	}
-	text.setFillColor(sf::Color::Black);
-	text.setPosition(x + 5, y);
+	
+	text.setFillColor(normalText);
+
+	if (hoverSelect) {
+		text.setFillColor(selectedText);
+		rectangle.setFillColor(selected);
+		rectangle.setPosition(sf::Vector2f(x + 3, y + 3));
+		rectangle.setSize(sf::Vector2f(xSize - 7, ySize - 7));
+		window.draw(rectangle);
+	}
+
+	adjustText();
+	if (biselPressed) { text.move(1,1); }
 	text.setString(labelToDisplay); window.draw(text);
 	
 }
