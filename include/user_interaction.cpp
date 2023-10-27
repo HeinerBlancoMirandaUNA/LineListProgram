@@ -1,13 +1,12 @@
 #include "user_interaction.h"
 
-UserInteraction::UserInteraction(sf::RenderWindow& window) {
+UserInteraction::UserInteraction() {
     clickL = false;
     clickR = false;
     resize = false;
     x = 0;
     y = 0;
     key = 0;
-    rebuildWindow(window);
 }
 
 UserInteraction::~UserInteraction() {

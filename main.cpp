@@ -1,17 +1,13 @@
 #include <iostream>
-#include "include/user_interaction.h"
-#include "include/file_load_and_save.h"
+#include "include/user_interface.h"
 
 int main()
 {
     
-    sf::RenderWindow window(sf::VideoMode(640, 480), "");  
-    UserInteraction User(window);
+    sf::RenderWindow window(sf::VideoMode(640, 480), "Initializing...");  
+    UserInterface UI(window);
 
-    //test stuff
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
+    /* 
     FileLoadAndSave trash;
 
     trash.readFile("testDump.txt");
@@ -21,18 +17,13 @@ int main()
     trash.saveToFile("copy.txt", trash.fileContents);
     trash.readFile("copy.txt");
     trash.saveToFile("copy2.txt", trash.fileContents);
+    */
 
+    
     while (window.isOpen()) {
-
-        User.update(window);
-
-
-        std::cout << User.key;
-
-        shape.setPosition(User.x, User.y);
-
-        window.clear();
-        window.draw(shape); // delete this
+        
+        window.clear(sf::Color::Blue);
+        UI.update(window);        
         window.display();
 
     }

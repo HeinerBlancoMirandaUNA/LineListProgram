@@ -8,7 +8,7 @@ private:
 	void textInput();
 
 public:
-	UserInteraction(sf::RenderWindow& window);
+	UserInteraction();
 	~UserInteraction();
 	bool clickL, clickR, resize;
 	char key;
