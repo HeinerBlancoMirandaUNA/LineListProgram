@@ -8,12 +8,11 @@ class UserInterface : public FileLoadAndSave
 public:
 	UserInterface(sf::RenderWindow& window);
 	~UserInterface();
-	UserInteraction User;
-	Box box;
 	void update(sf::RenderWindow& window);
 
 private:
-
+	Box box;
+	UserInteraction User;
 
 };
 

@@ -13,8 +13,12 @@ void UserInterface::update(sf::RenderWindow& window) {
 
 	User.update(window);
 	std::cout << User.key;
-	box.x = User.x + 50; box.y = User.y;
-	box.xSize = 200; box.ySize = 100;
+	box.x = 100; box.y = 100;
+	box.xSize = User.x; box.ySize = User.y;
+	if (User.key > 0) {
+		if (User.key == 8) { box.label.pop_back(); }
+		else { box.label = box.label + User.key; }
+	}
 	box.draw(window);
 
 }
