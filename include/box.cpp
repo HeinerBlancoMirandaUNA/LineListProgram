@@ -73,6 +73,10 @@ bool Box::isTouching(UserInteraction& User) {
 	return true;
 }
 
+bool Box::isPressed() {
+	return biselPressed;
+}
+
 void Box::adjustText() {
 	text.setPosition(x + 5, y);
 	labelToDisplay = label;

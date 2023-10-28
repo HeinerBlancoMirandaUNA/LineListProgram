@@ -3,6 +3,7 @@
 UserInterface::UserInterface(sf::RenderWindow& window) {
 
 	User.rebuildWindow(window);
+	lastPressed.x = 0 - lastPressed.xSize;
 	box.button("Windows 2000 Professional");
 	
 }
@@ -33,6 +34,16 @@ int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, string(&a
 	return toReturn;
 }
 
+void UserInterface::holdButton(sf::RenderWindow& window) {
+	lastPressed.draw(window);
+	if (lastPressed.isPressed()) {
+		window.display();
+		while (!User.released) { User.update(window); }
+		lastPressed.release();
+		lastPressed.x = 0 - lastPressed.xSize;
+	}
+}
+
 void UserInterface::update(sf::RenderWindow& window) {
 
 	User.update(window);
@@ -51,21 +62,19 @@ void UserInterface::update(sf::RenderWindow& window) {
 
 	box.draw(window);
 	
-	float toolbarHeight = 30;
+	float toolbarHeight = 32;
 	Deco.y = 0;
 	Deco.xSize = window.getSize().x; Deco.ySize = toolbarHeight; Deco.draw(window);
 	Deco.y = toolbarHeight;
 	Deco.xSize = 150; Deco.ySize = window.getSize().y - toolbarHeight; Deco.draw(window);
 
-	
 	string contents[] = {"Abrir","Guardar","Guardar como...","Salir"};
-	int action = Toolbar(window, 3, 3, contents);
-
+	int action = Toolbar(window, 4, 4, contents);
 
 	string contentso[] = { "Abortar", "Reintentar", "Omitir" };
 	Toolbar(window, 30, 300, contentso);
 
-	lastPressed.draw(window);
+	holdButton(window);
 
 	if (action == 3) {
 		window.close();

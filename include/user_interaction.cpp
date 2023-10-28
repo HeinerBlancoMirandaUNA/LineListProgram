@@ -37,8 +37,9 @@ void UserInteraction::update(sf::RenderWindow& window) {
     clickL = false;
     clickR = false;
     resize = false;
+    released = false;
     key = 0;
-
+    
     sf::Vector2f mousePosition;
     mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     x = mousePosition.x;
@@ -53,6 +54,8 @@ void UserInteraction::update(sf::RenderWindow& window) {
             clickR = event.mouseButton.button == sf::Mouse::Right;
         }
         
+        released = event.type == sf::Event::MouseButtonReleased;
+
         if (event.type == sf::Event::Resized) { rebuildWindow(window); }
         
         textInput();

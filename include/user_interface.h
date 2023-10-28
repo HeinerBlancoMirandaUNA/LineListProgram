@@ -14,10 +14,11 @@ public:
 private:
 	Box box, Button, Deco, lastPressed;
 	vector<Box> Form;
-	//int Toolbar(std::string items[], sf::RenderWindow& window);
+	void holdButton(sf::RenderWindow& window);
 	template<size_t total> 
 	int Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
 	UserInteraction User;
+	
 
 };
 

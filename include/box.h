@@ -27,6 +27,7 @@ public:
 	float x, y, xSize, ySize;
 	std::string label;
 	bool isTouching(UserInteraction& User);
+	bool isPressed();
 	void press();
 	void release();
 	void highlight();
