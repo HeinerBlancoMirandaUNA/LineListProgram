@@ -1,5 +1,4 @@
 #pragma once
-#include "user_interaction.h"
 #include "file_load_and_save.h"
 #include "box.h"
 

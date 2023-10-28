@@ -45,9 +45,7 @@ void Box::inputField(std::string thisLabel) {
 }
 
 void Box::setPressedColor(int red, int green, int blue) {
-
 	pressedColor = sf::Color(red, green, blue);
-
 }
 
 void Box::press() {
@@ -56,6 +54,12 @@ void Box::press() {
 
 void Box::release() {
 	biselPressed = false;
+}
+
+bool Box::isTouching(UserInteraction& User) {
+	if ((User.x < x) or (User.y < y)) { return false; }
+	if ((User.x > x + xSize) or (User.y > y + ySize)) { return false; }
+	return true;
 }
 
 void Box::adjustText() {

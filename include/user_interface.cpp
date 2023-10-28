@@ -29,8 +29,8 @@ void UserInterface::update(sf::RenderWindow& window) {
 		box.setPressedColor(70,255,70);
 	}
 
-	if (User.clickL) { box.press(); }
-	if (User.clickR) { box.release(); }
+	if (User.clickL and box.isTouching(User)) { box.press(); }
+	if (!User.clickL) { box.release(); }
 
 	mark.draw(window);
 	box.draw(window);

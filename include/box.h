@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include "colors.h"
+#include "user_interaction.h"
 
 class Box : public Colors
 {
@@ -29,6 +30,7 @@ public:
 	void setPressedColor(int red, int green, int blue);
 	void button(std::string thisLabel);
 	void inputField(std::string thisLabel);
+	bool isTouching(UserInteraction& User);
 	void draw(sf::RenderWindow& window);
 
 };
