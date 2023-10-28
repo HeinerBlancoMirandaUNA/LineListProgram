@@ -12,11 +12,19 @@ public:
 	void update(sf::RenderWindow& window);
 
 private:
-	Box box, Button, Deco, lastPressed;
-	vector<Box> Form;
+
+	Box Button, Deco, LastPressed, Input, Form, FormLabel;
+
+	int popupWindow;
 	void holdButton(sf::RenderWindow& window);
+	void initInputField(float x, float y, float xSize);
+
 	template<size_t total> 
 	int Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
+	
+	template<size_t total>
+	int Menu(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
+
 	UserInteraction User;
 	
 

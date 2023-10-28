@@ -33,6 +33,7 @@ void Box::nextTo(Box& thisBox) {
 }
 
 void Box::button(std::string thisLabel) {
+	isFilled = true;
 	autoAdjust = true;
 	biselEnable = true;
 	biselPressed = false;
@@ -43,12 +44,24 @@ void Box::button(std::string thisLabel) {
 }
 
 void Box::textField(std::string thisLabel) {
+	isFilled = true;
 	autoAdjust = false;
 	biselEnable = true;
 	biselPressed = true; 
 	highlightOnHover = false;
 	label = thisLabel;
 	ySize = 24;
+}
+
+void Box::menuItem(std::string thisLabel) {
+	isFilled = false;
+	autoAdjust = false;
+	biselEnable = false;
+	biselPressed = false;
+	highlightOnHover = false;
+	label = thisLabel;
+	ySize = 23;
+
 }
 
 void Box::setPressedColor(int red, int green, int blue) {
@@ -140,7 +153,7 @@ void Box::draw(sf::RenderWindow& window) {
 	if (biselPressed) { rectangle.setFillColor(pressedColor); }
 	rectangle.setPosition(sf::Vector2f(x, y));
 	rectangle.setSize(sf::Vector2f(xSize, ySize));
-	window.draw(rectangle);
+	if (isFilled) { window.draw(rectangle); }
 
 	if (biselEnable) {
 		drawBisel(window);
