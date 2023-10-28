@@ -25,21 +25,26 @@ int Box::characterLimit() {
 	return static_cast<int>((xSize - 10) / 8);
 }
 
+void Box::nextTo(Box& thisBox) {
+	x = thisBox.x + thisBox.xSize + 5;
+	y = thisBox.y;
+}
+
 void Box::button(std::string thisLabel) {
 	autoAdjust = true;
 	biselEnable = true;
 	biselPressed = false;
-	hoverSelect = false;
+	highlightOnHover = false;
 	label = thisLabel;
 	xSize = labelWidth() + 25;
 	ySize = 24;
 }
 
-void Box::inputField(std::string thisLabel) {
+void Box::textField(std::string thisLabel) {
 	autoAdjust = false;
 	biselEnable = true;
 	biselPressed = true; 
-	hoverSelect = false;
+	highlightOnHover = false;
 	label = thisLabel;
 	ySize = 24;
 }
@@ -54,6 +59,10 @@ void Box::press() {
 
 void Box::release() {
 	biselPressed = false;
+}
+
+void Box::highlight() {
+	highlightOnHover = true;
 }
 
 bool Box::isTouching(UserInteraction& User) {
@@ -133,12 +142,13 @@ void Box::draw(sf::RenderWindow& window) {
 	
 	text.setFillColor(normalText);
 
-	if (hoverSelect) {
+	if (highlightOnHover) {
 		text.setFillColor(selectedText);
 		rectangle.setFillColor(selected);
 		rectangle.setPosition(sf::Vector2f(x + 3, y + 3));
 		rectangle.setSize(sf::Vector2f(xSize - 7, ySize - 7));
 		window.draw(rectangle);
+		highlightOnHover = false;
 	}
 
 	adjustText();

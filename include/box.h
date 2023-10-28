@@ -14,7 +14,7 @@ private:
 	sf::Text text;
 	std::string labelToDisplay;
 	sf::Color pressedColor;
-	bool autoAdjust, biselEnable, hoverSelect, biselPressed;
+	bool autoAdjust, biselEnable, highlightOnHover, biselPressed;
 	float labelWidth();
 	int characterLimit();
 	void adjustText();
@@ -25,12 +25,14 @@ public:
 	~Box();
 	float x, y, xSize, ySize;
 	std::string label;
+	bool isTouching(UserInteraction& User);
 	void press();
 	void release();
+	void highlight();
 	void setPressedColor(int red, int green, int blue);
+	void nextTo (Box& thisBox);
 	void button(std::string thisLabel);
-	void inputField(std::string thisLabel);
-	bool isTouching(UserInteraction& User);
+	void textField(std::string thisLabel);
 	void draw(sf::RenderWindow& window);
 
 };
