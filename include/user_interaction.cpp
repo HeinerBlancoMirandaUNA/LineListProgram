@@ -17,6 +17,7 @@ void UserInteraction::rebuildWindow(sf::RenderWindow& window) {
     sf::Vector2i lastPosition = window.getPosition();
     window.create(sf::VideoMode(window.getSize().x, window.getSize().y), "Line List Program");
     window.setPosition(lastPosition);
+    window.setFramerateLimit(60);
     resize = true;
 }
 

@@ -11,11 +11,26 @@ UserInterface::~UserInterface() {
 
 }
 
-template<size_t total> int UserInterface::Toolbar(sf::RenderWindow& window, string(&arguments)[total]) {
+template<size_t total> 
+int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]) {
+	bool isFirst = true;
+	int toReturn = -1;
+	int counter = 0;
+	Button.x = x; Button.y = y;
+
 	for (string thisItem : arguments) {
-		std::cout << thisItem << std::endl;
+		if (!isFirst) { Button.nextTo(Button); }
+		Button.button(thisItem);
+		if (User.clickL and Button.isTouching(User)) { 
+			lastPressed = Button; 
+			lastPressed.press();
+			toReturn = counter;
+		}
+		Button.draw(window);
+		counter++;
+		isFirst = false;
 	}
-	return 0;
+	return toReturn;
 }
 
 void UserInterface::update(sf::RenderWindow& window) {
@@ -27,7 +42,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 		if (User.key == 8) { box.label.pop_back(); }
 		else { box.label = box.label + User.key; }
 		box.textField(box.label);
-		box.setPressedColor(70,255,70);
+		box.setPressedColor(70, 255, 70);
 	}
 
 	if (box.isTouching(User)) { box.highlight(); }
@@ -35,20 +50,25 @@ void UserInterface::update(sf::RenderWindow& window) {
 	if (User.clickR) { box.release(); }
 
 	box.draw(window);
-	/*
-	float toolbarHeight = 30;
-	Box Toolbar;
-	Toolbar.xSize = window.getSize().x; Toolbar.ySize = toolbarHeight; Toolbar.draw(window);
-	Box Sidebar; Sidebar.y = toolbarHeight;
-	Sidebar.xSize = 150; Sidebar.ySize = window.getSize().y - toolbarHeight; Sidebar.draw(window);
-	Box File; File.button("Abrir"); File.x = 5; File.y = 3; File.draw(window);
-	Box Save; Save.button("Guardar"); Save.nextTo(File); Save.draw(window);
-	Box Exit; Exit.button("Salir"); Exit.nextTo(Save); Exit.draw(window);
 	
+	float toolbarHeight = 30;
+	Deco.y = 0;
+	Deco.xSize = window.getSize().x; Deco.ySize = toolbarHeight; Deco.draw(window);
+	Deco.y = toolbarHeight;
+	Deco.xSize = 150; Deco.ySize = window.getSize().y - toolbarHeight; Deco.draw(window);
 
-	if (User.clickL and Exit.isTouching(User)) { window.close(); }
-	*/
-	string contents[] = {"123","gon","meh"};
-	Toolbar(window, contents);
+	
+	string contents[] = {"Abrir","Guardar","Guardar como...","Salir"};
+	int action = Toolbar(window, 3, 3, contents);
+
+
+	string contentso[] = { "Abortar", "Reintentar", "Omitir" };
+	Toolbar(window, 30, 300, contentso);
+
+	lastPressed.draw(window);
+
+	if (action == 3) {
+		window.close();
+	}
 
 }

@@ -12,10 +12,11 @@ public:
 	void update(sf::RenderWindow& window);
 
 private:
-	Box box;
+	Box box, Button, Deco, lastPressed;
 	vector<Box> Form;
 	//int Toolbar(std::string items[], sf::RenderWindow& window);
-	template<size_t total> int Toolbar(sf::RenderWindow& window, string(&arguments)[total]);
+	template<size_t total> 
+	int Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
 	UserInteraction User;
 
 };

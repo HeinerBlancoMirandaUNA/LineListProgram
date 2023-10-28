@@ -4,6 +4,7 @@
 #include <cmath>
 #include "colors.h"
 #include "user_interaction.h"
+#include "iostream"
 
 class Box : public Colors
 {

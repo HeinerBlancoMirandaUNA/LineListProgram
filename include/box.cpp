@@ -6,10 +6,12 @@ Box::Box() {
 	x = 0;
 	y = 0;
 	button("");
+	//WARNING: Do not instanciate too many boxes, as each time one get's created, cpu time gets wasted loading the font
 	font.loadFromFile("resources/LessPerfectDOSVGA.ttf");
 	text.setFont(font);
 	text.setCharacterSize(16);
 	pressedColor = biselB;
+	std::cout << ">>> New Box Created" << std::endl;
 	
 }
 Box::~Box() {
