@@ -3,10 +3,10 @@
 UserInterface::UserInterface(sf::RenderWindow& window) {
 
 	User.rebuildWindow(window);
-	popupWindow = 0;
 	LastPressed.x = 0 - LastPressed.xSize;
-	FormLabel.setPressedColor(0, 0, 255);
+	//FormLabel.setPressedColor(0, 0, 255);
 	Input.textField("Demo text field...");
+	Form = Hide;
 	
 }
 
@@ -37,7 +37,7 @@ int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, string(&a
 }
 
 template<size_t total>
-int UserInterface::Menu(sf::RenderWindow& window, float x, float y, string(&arguments)[total]) {
+int UserInterface::Menu(sf::RenderWindow& window, string(&arguments)[total]) {
 	int toReturn = -1;
 	float maxWidth = 0;
 	float height = 0;
@@ -50,17 +50,18 @@ int UserInterface::Menu(sf::RenderWindow& window, float x, float y, string(&argu
 	}
 	Button.xSize = maxWidth;
 	
-	Deco.x = x; Deco.y = y;
-	Deco.xSize = maxWidth; Deco.ySize = height+3;
-	Deco.draw(window);
-	Button.x = x; Button.y = y;
+	WindowForm.xSize = maxWidth; WindowForm.ySize = height+3;
+	WindowForm.draw(window);
+
+	Button.x = WindowForm.x; Button.y = WindowForm.y;
 	for (string thisItem : arguments) {
 		Button.menuItem(" " + thisItem);
 		if (Button.isTouching(User) && highlightOnce) { Button.highlight(); highlightOnce = false; }
 		Button.draw(window);
 		Button.y = Button.y + 20;
 	}
-	
+
+	if (User.clickL) { Form = Hide; }
 	return -1;
 
 }
@@ -81,8 +82,35 @@ void UserInterface::initInputField(float x, float y, float xSize) {
 
 }
 
+void UserInterface::show(UiForm thisForm) {
+	Form = thisForm;
+}
+
+void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
+	if (Form == Hide) { return; }
+
+	if (Form == ContextMenu) {
+		string context[] = { "Ocultar" , "Mostrar" , "Cambiar color..." , "Duplicar", "Borrar" , "1" , "2", "3" };
+		Menu(window, context);
+	}
+
+	if (Form == FilePicker) {
+		WindowForm.draw(window);
+	}
+	
+	User.clickL = false;  // Disables user input while any of the Forms is open
+}
+
+void UserInterface::initWindow(float xSize, float ySize) {
+	WindowForm.x = 20;
+	WindowForm.y = 20;
+	WindowForm.xSize = xSize;
+	WindowForm.ySize = ySize;
+}
+
 void UserInterface::update(sf::RenderWindow& window) {
 
+	/*
 	initInputField(200,100,200);
 	if (User.key > 0) {
 		if (User.key == 8) { Input.label.pop_back(); }
@@ -91,6 +119,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 		Input.setPressedColor(70, 255, 70);
 	}
 	Input.draw(window);
+	*/
 	
 	float toolbarHeight = 32;
 	Deco.x = 0; Deco.y = 0;
@@ -102,19 +131,15 @@ void UserInterface::update(sf::RenderWindow& window) {
 	int action = Toolbar(window, 4, 4, contents);
 
 	User.update(window);
+	formWindowUpdate(window);
 
-	if (popupWindow > 0) {
-		
+	if (User.clickR) { 
+		Form = ContextMenu;
+		WindowForm.x = User.x; WindowForm.y = User.y;
 	}
 
-	string context[] = { "Ocultar" , "Mostrar" , "Cambiar color..." , "Duplicar", "Borrar" , "1" , "2", "3"};
-	Menu(window, 300, 300, context);
-
-	string contentso[] = { "Aceptar", "Cancelar" };
-	Toolbar(window, 30, 300, contentso);
-
 	holdButton(window);
-
+	if (action == 0) { Form = FilePicker; initWindow(350,280);}
 	if (action == 3) { window.close(); }
 
 }

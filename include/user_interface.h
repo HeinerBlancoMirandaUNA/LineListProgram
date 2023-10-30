@@ -4,6 +4,16 @@
 using std::string;
 using std::vector;
 
+enum UiForm {
+	Hide,
+	InfoDialog,
+	ColorSelector,
+	TextInput,
+	ContextMenu,
+	YesNoDialog,
+	FilePicker
+};
+
 class UserInterface : public FileLoadAndSave
 {
 public:
@@ -13,20 +23,23 @@ public:
 
 private:
 
-	Box Button, Deco, LastPressed, Input, Form, FormLabel;
-
-	int popupWindow;
-	void holdButton(sf::RenderWindow& window);
-	void initInputField(float x, float y, float xSize);
+	Box Deco, Button, LastPressed, Input, WindowForm, WindowLabel;
+	UiForm Form;
 
 	template<size_t total> 
 	int Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
 	
 	template<size_t total>
-	int Menu(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
+	int Menu(sf::RenderWindow& window, string(&arguments)[total]);
+
+	void holdButton(sf::RenderWindow& window);
+	void initInputField(float x, float y, float xSize);
+
+	void show(UiForm thisForm);
+	void initWindow(float xSize, float ySize);
+	void formWindowUpdate(sf::RenderWindow& window);
 
 	UserInteraction User;
 	
-
 };
 
