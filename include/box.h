@@ -15,7 +15,7 @@ private:
 	sf::Text text;
 	std::string labelToDisplay;
 	sf::Color pressedColor;
-	bool autoAdjust, biselEnable, highlightOnHover, biselPressed, isFilled;
+	bool autoAdjust, biselEnable, highlightOnHover, biselPressed, isFilled, forceWhiteText;
 	
 	int characterLimit();
 	void adjustText();
@@ -35,6 +35,7 @@ public:
 	void setPressedColor(int red, int green, int blue);
 	void setPressedColor(sf::Color thisColor);
 	void nextTo(Box& thisBox);
+	void forceWhite();
 	void button(std::string thisLabel);
 	void textField(std::string thisLabel);
 	void menuItem(std::string thisLabel);

@@ -11,6 +11,7 @@ Box::Box() {
 	text.setFont(font);
 	text.setCharacterSize(16);
 	pressedColor = biselB;
+	forceWhiteText = false;
 	std::cout << ">>> New Box Created" << std::endl;
 	
 }
@@ -32,6 +33,10 @@ void Box::nextTo(Box& thisBox) {
 	y = thisBox.y;
 }
 
+void Box::forceWhite() {
+	forceWhiteText = true;
+}
+
 void Box::button(std::string thisLabel) {
 	isFilled = true;
 	autoAdjust = true;
@@ -47,7 +52,7 @@ void Box::textField(std::string thisLabel) {
 	isFilled = true;
 	autoAdjust = false;
 	biselEnable = true;
-	biselPressed = true; 
+	biselPressed = true;
 	highlightOnHover = false;
 	label = thisLabel;
 	ySize = 24;
@@ -164,6 +169,7 @@ void Box::draw(sf::RenderWindow& window) {
 	}
 	
 	text.setFillColor(normalText);
+	if (forceWhiteText) { text.setFillColor(selectedText); }
 
 	if (highlightOnHover) {
 		text.setFillColor(selectedText);

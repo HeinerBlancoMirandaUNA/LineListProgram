@@ -4,11 +4,11 @@ UserInterface::UserInterface(sf::RenderWindow& window) {
 
 	User.rebuildWindow(window);
 	LastPressed.x = 0 - LastPressed.xSize;
-	//FormLabel.setPressedColor(0, 0, 255);
 	Input.textField("Demo text field...");
 	Form = Hide;
-	WindowLabel.press();
+	WindowLabel.textField("Dummy text");
 	WindowLabel.setPressedColor(accent);
+	WindowLabel.forceWhite();
 }
 
 UserInterface::~UserInterface() {
@@ -87,26 +87,47 @@ void UserInterface::show(UiForm thisForm) {
 	Form = thisForm;
 }
 
+void UserInterface::initWindow(float xSize, float ySize) {
+	int newX = (-xSize / 2) + (User.width / 2);
+	int newY = (-ySize / 2) + (User.height / 2);
+	WindowForm.x = static_cast<float>(newX);
+	WindowForm.y = static_cast<float>(newY);
+	WindowForm.xSize = xSize;
+	WindowForm.ySize = ySize;
+	WindowLabel.x = WindowForm.x + 5;
+	WindowLabel.y = WindowForm.y + 5;
+	WindowLabel.xSize = WindowForm.xSize - 10;
+}
+
 void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
 	if (Form == Hide) { return; }
 
+	// For context menus
+
 	if (Form == ContextMenu) {
-		string context[] = { "Ocultar" , "Mostrar" , "Cambiar color..." , "Duplicar", "Borrar" , "1" , "2", "3" };
-		Menu(window, context);
+		string contents[] = { "Ocultar" , "Mostrar" , "Cambiar color..." , "Duplicar", "Borrar" };
+		Menu(window, contents);
+		User.clickL = false;
+		return;
 	}
+
+	// Other windows and dialogs
+
+	int action = -1;
+	WindowForm.draw(window);
+	float commandsX = WindowForm.x + 5;
+	float commandsY = WindowForm.y + WindowForm.ySize - 30;
 
 	if (Form == FilePicker) {
-		WindowForm.draw(window);
+		WindowLabel.label = "Escriba el nombre de arhivo";
+		string contents[] = { "Cancelar","Abrir" };
+		action = Toolbar(window, commandsX, commandsY, contents);		
 	}
 	
-	User.clickL = false;  // Disables user input while any of the Forms is open
-}
+	if (action == 0) { Form = Hide; }
+	WindowLabel.draw(window);
+	User.clickL = false;
 
-void UserInterface::initWindow(float xSize, float ySize) {
-	WindowForm.x = (-xSize / 2) + (User.width / 2);
-	WindowForm.y = (-ySize / 2) + (User.height / 2);
-	WindowForm.xSize = xSize;
-	WindowForm.ySize = ySize;
 }
 
 void UserInterface::update(sf::RenderWindow& window) {
@@ -140,7 +161,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 	}
 
 	holdButton(window);
-	if (action == 0) { Form = FilePicker; initWindow(350,280);}
+	if (action == 0) { Form = FilePicker; initWindow(440,110);}
 	if (action == 3) { window.close(); }
 
 }

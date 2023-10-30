@@ -23,6 +23,7 @@ public:
 
 private:
 
+	UserInteraction User;
 	Box Deco, Button, LastPressed, Input, WindowForm, WindowLabel;
 	UiForm Form;
 
@@ -37,8 +38,6 @@ private:
 	void show(UiForm thisForm);
 	void initWindow(float xSize, float ySize);
 	void formWindowUpdate(sf::RenderWindow& window);
-
-	UserInteraction User;
 	
 };
 

@@ -11,7 +11,7 @@ protected:
 	sf::Color normalText = sf::Color(0, 0, 0);
 	sf::Color selected = sf::Color(0, 0, 130);
 	sf::Color selectedText = sf::Color(255, 255, 255);
-	sf::Color accent = sf::Color(0, 0, 255);
+	sf::Color accent = sf::Color(100, 100, 255);
 	sf::Color inputBox = sf::Color(255, 255, 255);
 };
 
