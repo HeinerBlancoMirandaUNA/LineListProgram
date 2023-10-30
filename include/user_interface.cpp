@@ -7,7 +7,8 @@ UserInterface::UserInterface(sf::RenderWindow& window) {
 	//FormLabel.setPressedColor(0, 0, 255);
 	Input.textField("Demo text field...");
 	Form = Hide;
-	
+	WindowLabel.press();
+	WindowLabel.setPressedColor(accent);
 }
 
 UserInterface::~UserInterface() {
@@ -102,8 +103,8 @@ void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
 }
 
 void UserInterface::initWindow(float xSize, float ySize) {
-	WindowForm.x = 20;
-	WindowForm.y = 20;
+	WindowForm.x = (-xSize / 2) + (User.width / 2);
+	WindowForm.y = (-ySize / 2) + (User.height / 2);
 	WindowForm.xSize = xSize;
 	WindowForm.ySize = ySize;
 }
@@ -133,7 +134,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 	User.update(window);
 	formWindowUpdate(window);
 
-	if (User.clickR) { 
+	if (User.clickR&&Form == Hide) {
 		Form = ContextMenu;
 		WindowForm.x = User.x; WindowForm.y = User.y;
 	}

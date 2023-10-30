@@ -68,6 +68,10 @@ void Box::setPressedColor(int red, int green, int blue) {
 	pressedColor = sf::Color(red, green, blue);
 }
 
+void Box::setPressedColor(sf::Color thisColor) {
+	pressedColor = thisColor;
+}
+
 void Box::press() {
 	biselPressed = true;
 }

@@ -33,6 +33,7 @@ public:
 	void highlight();
 	float labelWidth();
 	void setPressedColor(int red, int green, int blue);
+	void setPressedColor(sf::Color thisColor);
 	void nextTo(Box& thisBox);
 	void button(std::string thisLabel);
 	void textField(std::string thisLabel);

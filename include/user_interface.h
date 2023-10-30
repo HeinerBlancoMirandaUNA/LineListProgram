@@ -14,7 +14,7 @@ enum UiForm {
 	FilePicker
 };
 
-class UserInterface : public FileLoadAndSave
+class UserInterface : public FileLoadAndSave, public Colors
 {
 public:
 	UserInterface(sf::RenderWindow& window);
@@ -34,7 +34,6 @@ private:
 
 	void holdButton(sf::RenderWindow& window);
 	void initInputField(float x, float y, float xSize);
-
 	void show(UiForm thisForm);
 	void initWindow(float xSize, float ySize);
 	void formWindowUpdate(sf::RenderWindow& window);
