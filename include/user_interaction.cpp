@@ -4,9 +4,12 @@ UserInteraction::UserInteraction() {
     clickL = false;
     clickR = false;
     resize = false;
+    released = false;
     x = 0;
     y = 0;
     key = 0;
+    width = 100;
+    height = 100;
 }
 
 UserInteraction::~UserInteraction() {
@@ -39,6 +42,8 @@ void UserInteraction::update(sf::RenderWindow& window) {
     resize = false;
     released = false;
     key = 0;
+    width = static_cast<float>(window.getSize().x);
+    height = static_cast<float>(window.getSize().y);
     
     sf::Vector2f mousePosition;
     mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));

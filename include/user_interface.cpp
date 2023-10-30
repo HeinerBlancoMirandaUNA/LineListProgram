@@ -123,9 +123,9 @@ void UserInterface::update(sf::RenderWindow& window) {
 	
 	float toolbarHeight = 32;
 	Deco.x = 0; Deco.y = 0;
-	Deco.xSize = window.getSize().x; Deco.ySize = toolbarHeight; Deco.draw(window);
+	Deco.xSize = User.width; Deco.ySize = toolbarHeight; Deco.draw(window);
 	Deco.y = toolbarHeight;
-	Deco.xSize = 150; Deco.ySize = window.getSize().y - toolbarHeight; Deco.draw(window);
+	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
 
 	string contents[] = {"Abrir","Guardar","Guardar como...","Salir"};
 	int action = Toolbar(window, 4, 4, contents);

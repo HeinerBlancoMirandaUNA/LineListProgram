@@ -12,7 +12,7 @@ public:
 	~UserInteraction();
 	bool clickL, clickR, resize, released;
 	char key;
-	float x, y;
+	float x, y, width, height;
 	void rebuildWindow(sf::RenderWindow& window);
 	void update(sf::RenderWindow& window);
 	
