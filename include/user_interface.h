@@ -34,7 +34,6 @@ private:
 	int Menu(sf::RenderWindow& window, string(&arguments)[total]);
 
 	void holdButton(sf::RenderWindow& window);
-	void initInputField(float x, float y, float xSize);
 	void show(UiForm thisForm);
 	void initWindow(float xSize, float ySize);
 	void formWindowUpdate(sf::RenderWindow& window);

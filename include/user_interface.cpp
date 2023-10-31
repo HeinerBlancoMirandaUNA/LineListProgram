@@ -4,9 +4,9 @@ UserInterface::UserInterface(sf::RenderWindow& window) {
 
 	User.rebuildWindow(window);
 	LastPressed.x = 0 - LastPressed.xSize;
-	Input.textField("Demo text field...");
 	Form = Hide;
-	WindowLabel.textField("Dummy text");
+	Input.setPressedColor(inputBox);
+	WindowLabel.press();
 	WindowLabel.setPressedColor(accent);
 	WindowLabel.forceWhite();
 }
@@ -77,12 +77,6 @@ void UserInterface::holdButton(sf::RenderWindow& window) {
 	}
 }
 
-void UserInterface::initInputField(float x, float y, float xSize) {
-	Input.x = x; Input.y = y; Input.xSize = xSize;
-	Input.setPressedColor(70, 255, 70);
-
-}
-
 void UserInterface::show(UiForm thisForm) {
 	Form = thisForm;
 }
@@ -111,7 +105,7 @@ void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
 		return;
 	}
 
-	// Other windows and dialogs
+	// Windows and Dialogs
 
 	int action = -1;
 	WindowForm.draw(window);
@@ -121,7 +115,9 @@ void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
 	if (Form == FilePicker) {
 		WindowLabel.label = "Escriba el nombre de arhivo";
 		string contents[] = { "Cancelar","Abrir" };
-		action = Toolbar(window, commandsX, commandsY, contents);		
+		action = Toolbar(window, commandsX, commandsY, contents);
+		Input.textField(WindowForm,40,User);
+		Input.draw(window);
 	}
 	
 	if (action == 0) { Form = Hide; }
@@ -132,17 +128,6 @@ void UserInterface::formWindowUpdate(sf::RenderWindow& window) {
 
 void UserInterface::update(sf::RenderWindow& window) {
 
-	/*
-	initInputField(200,100,200);
-	if (User.key > 0) {
-		if (User.key == 8) { Input.label.pop_back(); }
-		else { Input.label = Input.label + User.key; }
-		Input.textField(Input.label);
-		Input.setPressedColor(70, 255, 70);
-	}
-	Input.draw(window);
-	*/
-	
 	float toolbarHeight = 32;
 	Deco.x = 0; Deco.y = 0;
 	Deco.xSize = User.width; Deco.ySize = toolbarHeight; Deco.draw(window);

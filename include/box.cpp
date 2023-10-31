@@ -6,6 +6,7 @@ Box::Box() {
 	x = 0;
 	y = 0;
 	button("");
+	cursor = "";
 	//WARNING: Do not instanciate too many boxes, as each time one get's created, cpu time gets wasted loading the font
 	font.loadFromFile("resources/LessPerfectDOSVGA.ttf");
 	text.setFont(font);
@@ -48,13 +49,24 @@ void Box::button(std::string thisLabel) {
 	ySize = 24;
 }
 
-void Box::textField(std::string thisLabel) {
+void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	isFilled = true;
 	autoAdjust = false;
 	biselEnable = true;
 	biselPressed = true;
 	highlightOnHover = false;
-	label = thisLabel;
+
+	if (User.key > 0 && User.key != 8) {
+		label = label + User.key;
+	}
+	if (User.key == 8 && label.length() > 0) {
+		label.pop_back();
+	}
+	cursor = char(22);	if (User.timer % 1000 < 500) { cursor = " "; 
+
+	float cutout = 15;
+	x = thisBox.x + cutout; y = thisBox.y + adjustY;
+	xSize = thisBox.xSize - (2*cutout);
 	ySize = 24;
 }
 
@@ -102,9 +114,10 @@ bool Box::isPressed() {
 void Box::adjustText() {
 	text.setPosition(x + 5, y);
 	labelToDisplay = label;
-	if (label.length() > characterLimit()) {
+	unsigned int length = label.length() + cursor.length();
+	if (length > characterLimit()) {
 		if (characterLimit() < 1) { labelToDisplay = ""; return; }
-		labelToDisplay = char(17) + (label.substr(label.length() + 1 - characterLimit(), label.length()));
+		labelToDisplay = char(17) + (label.substr(length + 1 - characterLimit(), length));
 	}
 	else {
 		if (!autoAdjust) { return; }
@@ -113,6 +126,7 @@ void Box::adjustText() {
 		adjust = adjust;
 		text.move(std::round(adjust), 0);
 	}
+	
 }
 
 void Box::drawBisel(sf::RenderWindow& window) {
@@ -181,6 +195,7 @@ void Box::draw(sf::RenderWindow& window) {
 	}
 
 	adjustText();
+	labelToDisplay = labelToDisplay + cursor;
 	if (biselPressed) { text.move(1,1); }
 	text.setString(labelToDisplay); window.draw(text);
 	

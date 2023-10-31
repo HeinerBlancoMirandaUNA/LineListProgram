@@ -6,6 +6,7 @@
 #include "user_interaction.h"
 #include "iostream"
 
+
 class Box : public Colors
 {
 private:
@@ -13,8 +14,9 @@ private:
 	sf::RectangleShape line;
 	sf::Font font;
 	sf::Text text;
-	std::string labelToDisplay;
+	std::string labelToDisplay, cursor;
 	sf::Color pressedColor;
+
 	bool autoAdjust, biselEnable, highlightOnHover, biselPressed, isFilled, forceWhiteText;
 	
 	int characterLimit();
@@ -37,7 +39,7 @@ public:
 	void nextTo(Box& thisBox);
 	void forceWhite();
 	void button(std::string thisLabel);
-	void textField(std::string thisLabel);
+	void textField(Box& thisBox, float adjustY, UserInteraction& User);
 	void menuItem(std::string thisLabel);
 	void draw(sf::RenderWindow& window);
 

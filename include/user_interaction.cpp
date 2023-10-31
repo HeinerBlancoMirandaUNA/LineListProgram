@@ -44,6 +44,7 @@ void UserInteraction::update(sf::RenderWindow& window) {
     key = 0;
     width = static_cast<float>(window.getSize().x);
     height = static_cast<float>(window.getSize().y);
+    timer = clock.getElapsedTime().asMilliseconds();
     
     sf::Vector2f mousePosition;
     mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));

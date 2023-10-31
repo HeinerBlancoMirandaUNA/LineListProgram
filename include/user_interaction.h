@@ -6,6 +6,7 @@ class UserInteraction
 private:
 	sf::Event event;
 	void textInput();
+	sf::Clock clock;
 
 public:
 	UserInteraction();
@@ -13,6 +14,7 @@ public:
 	bool clickL, clickR, resize, released;
 	char key;
 	float x, y, width, height;
+	int timer;
 	void rebuildWindow(sf::RenderWindow& window);
 	void update(sf::RenderWindow& window);
 	
