@@ -16,6 +16,7 @@ Box::Box() {
 	std::cout << ">>> New Box Created" << std::endl;
 	
 }
+
 Box::~Box() {
 
 }
@@ -50,6 +51,7 @@ void Box::button(std::string thisLabel) {
 }
 
 void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
+	setPressedColor(inputBox);
 	isFilled = true;
 	autoAdjust = false;
 	biselEnable = true;
@@ -62,7 +64,7 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	if (User.key == 8 && label.length() > 0) {
 		label.pop_back();
 	}
-	cursor = char(22);	if (User.timer % 1000 < 500) { cursor = " "; 
+	cursor = char(22);	if (User.timer % 1000 < 500) { cursor = " "; }
 
 	float cutout = 15;
 	x = thisBox.x + cutout; y = thisBox.y + adjustY;
@@ -114,7 +116,7 @@ bool Box::isPressed() {
 void Box::adjustText() {
 	text.setPosition(x + 5, y);
 	labelToDisplay = label;
-	unsigned int length = label.length() + cursor.length();
+	int length = static_cast<int>(label.length() + cursor.length());
 	if (length > characterLimit()) {
 		if (characterLimit() < 1) { labelToDisplay = ""; return; }
 		labelToDisplay = char(17) + (label.substr(length + 1 - characterLimit(), length));

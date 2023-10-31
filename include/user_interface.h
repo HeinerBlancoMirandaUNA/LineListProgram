@@ -7,11 +7,12 @@ using std::vector;
 enum UiForm {
 	Hide,
 	InfoDialog,
-	ColorSelector,
-	TextInput,
 	ContextMenu,
 	YesNoDialog,
-	FilePicker
+	OpenFile,
+	SaveFile,
+	Rename,
+	ColorSelector
 };
 
 class UserInterface : public FileLoadAndSave, public Colors
@@ -24,7 +25,7 @@ public:
 private:
 
 	UserInteraction User;
-	Box Deco, Button, LastPressed, Input, WindowForm, WindowLabel;
+	Box Deco, Button, LastPressed, FileInput, RenameInput, WindowForm, WindowLabel;
 	UiForm Form;
 
 	template<size_t total> 
@@ -34,9 +35,8 @@ private:
 	int Menu(sf::RenderWindow& window, string(&arguments)[total]);
 
 	void holdButton(sf::RenderWindow& window);
-	void show(UiForm thisForm);
-	void initWindow(float xSize, float ySize);
-	void formWindowUpdate(sf::RenderWindow& window);
+	void adjustWindow(float xSize, float ySize);
+	void updateForm(sf::RenderWindow& window);
 	
 };
 
