@@ -58,7 +58,9 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	biselPressed = true;
 	highlightOnHover = false;
 
-	if (User.key > 0 && User.key != 8) {
+	bool inputAllowed = User.key > 0 && User.key != 8 && User.key != 13;
+
+	if (inputAllowed) {
 		label = label + User.key;
 	}
 	if (User.key == 8 && label.length() > 0) {
@@ -67,9 +69,11 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	cursor = char(22);	if (User.timer % 1000 < 500) { cursor = " "; }
 
 	float cutout = 15;
-	x = thisBox.x + cutout; y = thisBox.y + adjustY;
+
+	x = thisBox.x + cutout; 
 	xSize = thisBox.xSize - (2*cutout);
 	ySize = 24;
+	y = (thisBox.y + thisBox.ySize) - adjustY;
 }
 
 void Box::menuItem(std::string thisLabel) {
@@ -141,7 +145,17 @@ void Box::drawBisel(sf::RenderWindow& window) {
 		upperSide = biselD;
 		lowerSide = biselB;
 		middleShadow = biselA;
+		
+		line.setFillColor(biselC);
+		line.setPosition(sf::Vector2f(x+2, y+2));
+		line.setSize(sf::Vector2f(1, ySize - 4)); window.draw(line);
+		line.setSize(sf::Vector2f(xSize - 4, 1));	window.draw(line);
 	}
+
+	line.setFillColor(upperSide);
+	line.setPosition(sf::Vector2f(x, y));
+	line.setSize(sf::Vector2f(xSize, 2)); window.draw(line);
+	line.setSize(sf::Vector2f(2, ySize - 1)); window.draw(line);
 
 	line.setFillColor(lowerSide);
 	line.setPosition(sf::Vector2f(x, (y + ySize) - 1));
@@ -152,23 +166,8 @@ void Box::drawBisel(sf::RenderWindow& window) {
 	line.setFillColor(middleShadow);
 	line.setPosition(sf::Vector2f(x + 1, (y + (ySize - 2))));
 	line.setSize(sf::Vector2f(xSize - 2, 1)); window.draw(line);
-	line.setPosition(sf::Vector2f((x + xSize) - 2, y + 1));
-	line.setSize(sf::Vector2f(1, ySize - 2)); window.draw(line);
-
-	line.setFillColor(upperSide);
-	line.setPosition(sf::Vector2f(x + 1, y + 1));
-	line.setSize(sf::Vector2f(xSize - 2, 1)); window.draw(line);
+	line.setPosition(sf::Vector2f((x + xSize) - 2, y + 2));
 	line.setSize(sf::Vector2f(1, ySize - 3)); window.draw(line);
-	line.setPosition(sf::Vector2f(x, y));
-	line.setSize(sf::Vector2f(xSize, 1)); window.draw(line);
-	line.setSize(sf::Vector2f(1, ySize-1)); window.draw(line);
-
-	if (!biselPressed) { return; }
-
-	line.setFillColor(biselC);
-	line.move(2, 2); 
-	line.setSize(sf::Vector2f(1, ySize - 4)); window.draw(line);
-	line.setSize(sf::Vector2f(xSize - 4, 1));	window.draw(line);
 
 }
 

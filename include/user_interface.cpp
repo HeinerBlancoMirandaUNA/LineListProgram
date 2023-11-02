@@ -120,21 +120,21 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 	if (Form == OpenFile) {
 		WindowLabel.label = "Escriba el nombre de arhivo";
 		action = Toolbar(window, tX, tY, {"Abrir","Cancelar"});
-		FileInput.textField(WindowForm,40,User);
+		FileInput.textField(WindowForm,68,User);
 		FileInput.draw(window);
 	}
 
 	if (Form == SaveFile) {
 		WindowLabel.label = "Guardar como...";
 		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
-		FileInput.textField(WindowForm, 40, User);
+		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
 	}
 
 	if (Form == Rename) {
 		WindowLabel.label = "Cambiar nombre de ruta";
 		action = Toolbar(window, tX, tY, { "Renombrar","Cancelar" });
-		RenameInput.textField(WindowForm, 40, User);
+		RenameInput.textField(WindowForm, 68, User);
 		RenameInput.draw(window);
 	}
 
