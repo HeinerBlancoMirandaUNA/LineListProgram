@@ -17,10 +17,11 @@ private:
 	std::string labelToDisplay, cursor;
 	sf::Color pressedColor;
 
-	bool autoAdjust, biselEnable, highlightOnHover, biselPressed, isFilled, forceWhiteText;
+	bool autoAdjust, biselEnable, biselPressed, highlightOnHover, isFilled, forceWhiteText, textWrap;
 	
 	int characterLimit();
 	void adjustText();
+	void adjustTextWrap(sf::RenderWindow& window, std::string toPrint);
 	void drawBisel(sf::RenderWindow& window);
 
 public:
@@ -40,6 +41,7 @@ public:
 	void forceWhite();
 	void button(std::string thisLabel);
 	void textField(Box& thisBox, float adjustY, UserInteraction& User);
+	void textLabel(std::string thisLabel);
 	void menuItem(std::string thisLabel);
 	void draw(sf::RenderWindow& window);
 

@@ -6,9 +6,9 @@ UserInterface::UserInterface(sf::RenderWindow& window) {
 	User.rebuildWindow(window);
 	LastPressed.x = 0 - LastPressed.xSize;
 	
-	WindowLabel.press();
-	WindowLabel.setPressedColor(accent);
-	WindowLabel.forceWhite();
+	Title.press();
+	Title.setPressedColor(accent);
+	Title.forceWhite();
 }
 
 UserInterface::~UserInterface() {
@@ -85,9 +85,9 @@ void UserInterface::adjustWindow(float xSize, float ySize) {
 	WindowForm.y = static_cast<float>(newY);
 	WindowForm.xSize = xSize;
 	WindowForm.ySize = ySize;
-	WindowLabel.x = WindowForm.x + 5;
-	WindowLabel.y = WindowForm.y + 5;
-	WindowLabel.xSize = WindowForm.xSize - 10;
+	Title.x = WindowForm.x + 5;
+	Title.y = WindowForm.y + 5;
+	Title.xSize = WindowForm.xSize - 10;
 }
 
 void UserInterface::updateForm(sf::RenderWindow& window) {
@@ -118,33 +118,33 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 	WindowForm.draw(window);
 
 	if (Form == OpenFile) {
-		WindowLabel.label = "Escriba el nombre de arhivo";
+		Title.label = "Escriba el nombre de arhivo";
 		action = Toolbar(window, tX, tY, {"Abrir","Cancelar"});
 		FileInput.textField(WindowForm,68,User);
 		FileInput.draw(window);
 	}
 
 	if (Form == SaveFile) {
-		WindowLabel.label = "Guardar como...";
+		Title.label = "Guardar como...";
 		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
 		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
 	}
 
 	if (Form == Rename) {
-		WindowLabel.label = "Cambiar nombre de ruta";
+		Title.label = "Cambiar nombre de ruta";
 		action = Toolbar(window, tX, tY, { "Renombrar","Cancelar" });
 		RenameInput.textField(WindowForm, 68, User);
 		RenameInput.draw(window);
 	}
 
 	if (Form == ColorSelector) {
-		WindowLabel.label = "Seleccione un nuevo color";
+		Title.label = "Seleccione un nuevo color";
 		action = Toolbar(window, tX, tY, { "Cambiar color" , "Cancelar" });
 	}
 
 	if (action > -1) { Form = Hide; }
-	WindowLabel.draw(window);
+	Title.draw(window);
 	User.clickL = false;
 
 }
@@ -158,6 +158,10 @@ void UserInterface::update(sf::RenderWindow& window) {
 	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
 
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
+	Info.x = 200; Info.y = 200;
+	Info.xSize = User.x; Info.ySize = User.y;
+	Info.textLabel("ho mo pt am on  no  yu  ju  ko");
+	Info.draw(window);
 
 	User.update(window);
 	updateForm(window);

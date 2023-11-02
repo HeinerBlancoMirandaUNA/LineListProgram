@@ -45,6 +45,7 @@ void Box::button(std::string thisLabel) {
 	biselEnable = true;
 	biselPressed = false;
 	highlightOnHover = false;
+	textWrap = false;
 	label = thisLabel;
 	xSize = labelWidth() + 25;
 	ySize = 24;
@@ -57,6 +58,7 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	biselEnable = true;
 	biselPressed = true;
 	highlightOnHover = false;
+	textWrap = false;
 
 	bool inputAllowed = User.key > 0 && User.key != 8 && User.key != 13;
 
@@ -76,12 +78,24 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 	y = (thisBox.y + thisBox.ySize) - adjustY;
 }
 
+void Box::textLabel(std::string thisLabel) {
+	isFilled = true;
+	autoAdjust = false;
+	biselEnable = false;
+	biselPressed = false;
+	highlightOnHover = false;
+	textWrap = true;
+	label = thisLabel;
+
+}
+
 void Box::menuItem(std::string thisLabel) {
 	isFilled = false;
 	autoAdjust = false;
 	biselEnable = false;
 	biselPressed = false;
 	highlightOnHover = false;
+	textWrap = false;
 	label = thisLabel;
 	ySize = 23;
 
@@ -118,7 +132,7 @@ bool Box::isPressed() {
 }
 
 void Box::adjustText() {
-	text.setPosition(x + 5, y);
+	
 	labelToDisplay = label;
 	int length = static_cast<int>(label.length() + cursor.length());
 	if (length > characterLimit()) {
@@ -132,6 +146,23 @@ void Box::adjustText() {
 		adjust = adjust;
 		text.move(std::round(adjust), 0);
 	}
+	
+}
+
+void Box::adjustTextWrap(sf::RenderWindow& window, std::string toPrint) {
+	
+	std::string cutout;
+	int selected = characterLimit();
+
+	if (toPrint.length() > characterLimit()) {
+		while (toPrint[selected] != ' ' && selected > 0) { selected--; }
+		cutout = (toPrint.substr(selected + 1, toPrint.length()));
+		toPrint = (toPrint.substr(0, selected));
+	}
+
+	text.setString(toPrint); window.draw(text); text.move(0, 15);
+	
+	if (!cutout.empty()) adjustTextWrap(window, cutout);
 	
 }
 
@@ -195,10 +226,16 @@ void Box::draw(sf::RenderWindow& window) {
 		highlightOnHover = false;
 	}
 
-	adjustText();
-	labelToDisplay = labelToDisplay + cursor;
-	if (biselPressed) { text.move(1,1); }
-	text.setString(labelToDisplay); window.draw(text);
+	text.setPosition(x + 5, y);
+	if (textWrap) {
+		adjustTextWrap(window, label);
+	}
+	else {
+		adjustText();
+		labelToDisplay = labelToDisplay + cursor;
+		if (biselPressed) { text.move(1, 1); }
+		text.setString(labelToDisplay); window.draw(text);
+	}
 	
 }
 

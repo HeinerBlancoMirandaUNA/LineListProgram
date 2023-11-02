@@ -25,7 +25,7 @@ public:
 private:
 
 	UserInteraction User;
-	Box Deco, Button, LastPressed, FileInput, RenameInput, WindowForm, WindowLabel;
+	Box Deco, Button, Info, LastPressed, FileInput, RenameInput, WindowForm, Title;
 	UiForm Form;
 
 	int Toolbar(sf::RenderWindow& window, float x, float y, vector<string> arguments);
