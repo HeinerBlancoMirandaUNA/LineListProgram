@@ -15,8 +15,8 @@ UserInterface::~UserInterface() {
 
 }
 
-template<size_t total> 
-int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]) {
+
+int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, vector<string> arguments) {
 	bool isFirst = true;
 	int toReturn = -1;
 	int counter = 0;
@@ -37,8 +37,7 @@ int UserInterface::Toolbar(sf::RenderWindow& window, float x, float y, string(&a
 	return toReturn;
 }
 
-template<size_t total>
-int UserInterface::Menu(sf::RenderWindow& window, string(&arguments)[total]) {
+int UserInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 	int toReturn = -1;
 	float maxWidth = 0;
 	float height = 0;
@@ -99,8 +98,7 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 	// Context Menus
 
 	if (Form == ContextMenu) {
-		string contents[] = {"Ocultar/Mostrar","Cambiar color...","Renombrar","Duplicar","Borrar"};
-		action = Menu(window, contents);
+		action = Menu(window, {"Ocultar/Mostrar","Cambiar color...","Renombrar","Duplicar","Borrar"});
 		User.clickL = false;
 
 		if (action == 1) { Form = ColorSelector; }
@@ -115,38 +113,34 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 	if (isInputDialog) { adjustWindow(440, 110); }
 	if (Form == ColorSelector) { adjustWindow(400, 200); }
 	
-	float commandsX = WindowForm.x + 5;
-	float commandsY = WindowForm.y + WindowForm.ySize - 30;
+	float tX = WindowForm.x + 5;
+	float tY = WindowForm.y + WindowForm.ySize - 30;
 	WindowForm.draw(window);
 
 	if (Form == OpenFile) {
 		WindowLabel.label = "Escriba el nombre de arhivo";
-		string contents[] = {"Abrir","Cancelar"};
-		action = Toolbar(window, commandsX, commandsY, contents);
+		action = Toolbar(window, tX, tY, {"Abrir","Cancelar"});
 		FileInput.textField(WindowForm,40,User);
 		FileInput.draw(window);
 	}
 
 	if (Form == SaveFile) {
 		WindowLabel.label = "Guardar como...";
-		string contents[] = { "Guardar","Cancelar" };
-		action = Toolbar(window, commandsX, commandsY, contents);
+		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
 		FileInput.textField(WindowForm, 40, User);
 		FileInput.draw(window);
 	}
 
 	if (Form == Rename) {
 		WindowLabel.label = "Cambiar nombre de ruta";
-		string contents[] = { "Renombrar","Cancelar" };
-		action = Toolbar(window, commandsX, commandsY, contents);
+		action = Toolbar(window, tX, tY, { "Renombrar","Cancelar" });
 		RenameInput.textField(WindowForm, 40, User);
 		RenameInput.draw(window);
 	}
 
 	if (Form == ColorSelector) {
 		WindowLabel.label = "Seleccione un nuevo color";
-		string contents[] = { "Cambiar color" , "Cancelar" };
-		action = Toolbar(window, commandsX, commandsY, contents);
+		action = Toolbar(window, tX, tY, { "Cambiar color" , "Cancelar" });
 	}
 
 	if (action > -1) { Form = Hide; }
@@ -163,8 +157,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 	Deco.y = toolbarHeight;
 	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
 
-	string contents[] = {"Abrir","Guardar","Ayuda","Salir"};
-	int action = Toolbar(window, 4, 4, contents);
+	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 
 	User.update(window);
 	updateForm(window);

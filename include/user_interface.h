@@ -28,11 +28,9 @@ private:
 	Box Deco, Button, LastPressed, FileInput, RenameInput, WindowForm, WindowLabel;
 	UiForm Form;
 
-	template<size_t total> 
-	int Toolbar(sf::RenderWindow& window, float x, float y, string(&arguments)[total]);
+	int Toolbar(sf::RenderWindow& window, float x, float y, vector<string> arguments);
 	
-	template<size_t total>
-	int Menu(sf::RenderWindow& window, string(&arguments)[total]);
+	int Menu(sf::RenderWindow& window, vector<string> arguments);
 
 	void holdButton(sf::RenderWindow& window);
 	void adjustWindow(float xSize, float ySize);

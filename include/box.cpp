@@ -124,7 +124,7 @@ void Box::adjustText() {
 	else {
 		if (!autoAdjust) { return; }
 		float adjust = xSize - labelWidth();
-		adjust = adjust / 2; // don't divide by 2 to adjust to the right
+		adjust = adjust / 2;
 		adjust = adjust;
 		text.move(std::round(adjust), 0);
 	}
