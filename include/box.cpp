@@ -79,9 +79,9 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 }
 
 void Box::textLabel(std::string thisLabel) {
-	isFilled = true;
+	isFilled = false;
 	autoAdjust = false;
-	biselEnable = true;
+	biselEnable = false;
 	biselPressed = false;
 	highlightOnHover = false;
 	textWrap = true;

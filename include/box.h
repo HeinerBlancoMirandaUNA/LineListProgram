@@ -10,7 +10,7 @@ class Box : public Colors
 {
 private:
 	static const int fontXsize = 8;
-	static const int fontYsize = 12;
+	static const int fontYsize = 15;
 
 	sf::RectangleShape rectangle;
 	sf::RectangleShape line;

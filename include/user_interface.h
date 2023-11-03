@@ -29,11 +29,11 @@ private:
 	UiForm Form;
 
 	int Toolbar(sf::RenderWindow& window, float x, float y, vector<string> arguments);
-	
 	int Menu(sf::RenderWindow& window, vector<string> arguments);
-
+	
 	void holdButton(sf::RenderWindow& window);
 	void adjustWindow(float xSize, float ySize);
+	void tellUser(string title, string body);
 	void displayForm(sf::RenderWindow& window);
 	
 };

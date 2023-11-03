@@ -90,6 +90,12 @@ void UserInterface::adjustWindow(float xSize, float ySize) {
 	Title.xSize = WindowForm.xSize - 10;
 }
 
+void UserInterface::tellUser(string title, string body) {
+	Title.label = title;
+	Info.textLabel(body);
+	Form = InfoDialog;
+}
+
 void UserInterface::displayForm(sf::RenderWindow& window) {
 	
 	int action = -1;
@@ -111,7 +117,7 @@ void UserInterface::displayForm(sf::RenderWindow& window) {
 
 	bool isInput = Form==OpenFile || Form==SaveFile || Form==Rename;
 	if (isInput) { adjustWindow(440, 110); }
-	if (Form == InfoDialog) { adjustWindow(400, 140); }
+	if (Form == InfoDialog) { adjustWindow(400, 130); }
 	if (Form == ColorSelector) { adjustWindow(400, 200); }
 	
 	float tX = WindowForm.x + 5;
@@ -123,6 +129,7 @@ void UserInterface::displayForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, {"Abrir","Cancelar"});
 		FileInput.textField(WindowForm,68,User);
 		FileInput.draw(window);
+		if (action == 0) { tellUser("Error", "El archivo especificado no tiene un formato válido."); return; }
 	}
 
 	if (Form == SaveFile) {
@@ -130,6 +137,7 @@ void UserInterface::displayForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
 		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
+		if (action == 0) { tellUser("Error", "Hubo un problema al guardar el archivo. Intente guardar en otra ubicacion o pruebe un nombre de archivo distinto."); return; }
 	}
 
 	if (Form == InfoDialog) {
@@ -166,10 +174,6 @@ void UserInterface::update(sf::RenderWindow& window) {
 	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
 
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
-	Info.x = 200; Info.y = 200;
-	Info.xSize = User.x; Info.ySize = User.y;
-	Info.textLabel("Welcome to Microsoft Windows XP, the new Microsoft operating system that will blow your mind.");
-	Info.draw(window);
 
 	User.update(window);
 	displayForm(window);
@@ -182,7 +186,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 	holdButton(window);
 	if (action == 0) { Form = OpenFile; }
 	if (action == 1) { Form = SaveFile; }
-	if (action == 2) { Form = InfoDialog; }
+	if (action == 2) { tellUser("Ayuda","Use clic izquierdo sobre el mapa para agregar puntos a la ruta actual o click derecho para cambiar sus propiedades. Use el panel izquierdo para seleccionar o agregar otra ruta."); }
 	if (action == 3) { window.close(); }
 
 }
