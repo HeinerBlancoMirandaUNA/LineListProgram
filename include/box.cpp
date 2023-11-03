@@ -7,6 +7,7 @@ Box::Box() {
 	y = 0;
 	button("");
 	cursor = "";
+	shadowEnable = false;
 	//WARNING: Do not instanciate too many boxes, as each time one get's created, cpu time gets wasted loading the font
 	font.loadFromFile("resources/LessPerfectDOSVGA.ttf");
 	text.setFont(font);
@@ -121,6 +122,10 @@ void Box::highlight() {
 	highlightOnHover = true;
 }
 
+void Box::forceShadow() {
+	shadowEnable = true;
+}
+
 bool Box::isTouching(UserInteraction& User) {
 	if ((User.x < x) or (User.y < y)) { return false; }
 	if ((User.x > x + xSize) or (User.y > y + ySize)) { return false; }
@@ -212,12 +217,18 @@ void Box::drawBisel(sf::RenderWindow& window) {
 
 void Box::draw(sf::RenderWindow& window) {
 
+	if (shadowEnable) {
+		rectangle.setFillColor(boxShadow);
+		rectangle.setPosition(sf::Vector2f(x+12, y+12));
+		window.draw(rectangle);
+	}
+	
 	rectangle.setFillColor(biselB);
 	if (biselPressed) { rectangle.setFillColor(pressedColor); }
 	rectangle.setPosition(sf::Vector2f(x, y));
 	rectangle.setSize(sf::Vector2f(xSize, ySize));
 	if (isFilled) { window.draw(rectangle); }
-
+	
 	if (biselEnable) {
 		drawBisel(window);
 	}

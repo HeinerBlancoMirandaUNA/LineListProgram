@@ -6,6 +6,7 @@ UserInterface::UserInterface(sf::RenderWindow& window) {
 	User.rebuildWindow(window);
 	LastPressed.x = 0 - LastPressed.xSize;
 	
+	WindowForm.forceShadow();
 	Title.press();
 	Title.setPressedColor(accent);
 	Title.forceWhite();

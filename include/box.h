@@ -19,7 +19,7 @@ private:
 	std::string labelToDisplay, cursor;
 	sf::Color pressedColor;
 
-	bool autoAdjust, biselEnable, biselPressed, highlightOnHover, isFilled, forceWhiteText, textWrap;
+	bool autoAdjust, biselEnable, biselPressed, highlightOnHover, isFilled, forceWhiteText, textWrap, shadowEnable;
 	
 	int characterLimit();
 	void adjustText();
@@ -41,6 +41,7 @@ public:
 	void setPressedColor(sf::Color thisColor);
 	void nextTo(Box& thisBox);
 	void forceWhite();
+	void forceShadow();
 	void button(std::string thisLabel);
 	void textField(Box& thisBox, float adjustY, UserInteraction& User);
 	void textLabel(std::string thisLabel);
