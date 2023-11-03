@@ -34,7 +34,7 @@ private:
 
 	void holdButton(sf::RenderWindow& window);
 	void adjustWindow(float xSize, float ySize);
-	void updateForm(sf::RenderWindow& window);
+	void displayForm(sf::RenderWindow& window);
 	
 };
 

@@ -81,7 +81,7 @@ void Box::textField(Box& thisBox, float adjustY, UserInteraction& User) {
 void Box::textLabel(std::string thisLabel) {
 	isFilled = true;
 	autoAdjust = false;
-	biselEnable = false;
+	biselEnable = true;
 	biselPressed = false;
 	highlightOnHover = false;
 	textWrap = true;
@@ -152,18 +152,26 @@ void Box::adjustText() {
 void Box::adjustTextWrap(sf::RenderWindow& window, std::string toPrint) {
 	
 	std::string cutout;
-	int selected = characterLimit();
+	
+	if (toPrint[0] == ' ') {
+		int selected = 1;
+		while (toPrint[selected] == ' '&& selected < toPrint.length()) { selected++; }
+		toPrint = (toPrint.substr(selected, toPrint.length()));
+	}
 
 	if (toPrint.length() > characterLimit()) {
+		int selected = characterLimit();
 		while (toPrint[selected] != ' ' && selected > 0) { selected--; }
 		cutout = (toPrint.substr(selected + 1, toPrint.length()));
 		toPrint = (toPrint.substr(0, selected));
 	}
 
-	text.setString(toPrint); window.draw(text); text.move(0, 15);
+	if ((text.getPosition().y + fontYsize) > (y + (ySize - 10))) { return; }
+
+	text.setString(toPrint); window.draw(text); text.move(0, fontYsize);
 	
 	if (!cutout.empty()) adjustTextWrap(window, cutout);
-	
+
 }
 
 void Box::drawBisel(sf::RenderWindow& window) {
@@ -227,7 +235,9 @@ void Box::draw(sf::RenderWindow& window) {
 	}
 
 	text.setPosition(x + 5, y);
+	//linesDrawn = 0;
 	if (textWrap) {
+		
 		adjustTextWrap(window, label);
 	}
 	else {

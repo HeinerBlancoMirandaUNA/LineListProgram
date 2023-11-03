@@ -90,7 +90,7 @@ void UserInterface::adjustWindow(float xSize, float ySize) {
 	Title.xSize = WindowForm.xSize - 10;
 }
 
-void UserInterface::updateForm(sf::RenderWindow& window) {
+void UserInterface::displayForm(sf::RenderWindow& window) {
 	
 	int action = -1;
 	if (Form == Hide) { return; }
@@ -109,8 +109,9 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 
 	// Windows and Dialogs
 
-	bool isInputDialog = Form==OpenFile || Form==SaveFile || Form==Rename;
-	if (isInputDialog) { adjustWindow(440, 110); }
+	bool isInput = Form==OpenFile || Form==SaveFile || Form==Rename;
+	if (isInput) { adjustWindow(440, 110); }
+	if (Form == InfoDialog) { adjustWindow(400, 140); }
 	if (Form == ColorSelector) { adjustWindow(400, 200); }
 	
 	float tX = WindowForm.x + 5;
@@ -129,6 +130,13 @@ void UserInterface::updateForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
 		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
+	}
+
+	if (Form == InfoDialog) {
+		Info.x = WindowForm.x + 5; Info.y = WindowForm.y + 30;
+		Info.xSize = WindowForm.xSize - 10; Info.ySize = WindowForm.ySize - 60;
+		Info.draw(window);
+		action = Toolbar(window, tX, tY, { "Aceptar" });
 	}
 
 	if (Form == Rename) {
@@ -160,11 +168,11 @@ void UserInterface::update(sf::RenderWindow& window) {
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 	Info.x = 200; Info.y = 200;
 	Info.xSize = User.x; Info.ySize = User.y;
-	Info.textLabel("ho mo pt am on  no  yu  ju  ko");
+	Info.textLabel("Welcome to Microsoft Windows XP, the new Microsoft operating system that will blow your mind.");
 	Info.draw(window);
 
 	User.update(window);
-	updateForm(window);
+	displayForm(window);
 
 	if (User.clickR&&Form == Hide) {
 		Form = ContextMenu;
@@ -174,6 +182,7 @@ void UserInterface::update(sf::RenderWindow& window) {
 	holdButton(window);
 	if (action == 0) { Form = OpenFile; }
 	if (action == 1) { Form = SaveFile; }
+	if (action == 2) { Form = InfoDialog; }
 	if (action == 3) { window.close(); }
 
 }
