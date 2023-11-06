@@ -1,5 +1,6 @@
 //#pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class Colors
 {
@@ -15,5 +16,6 @@ protected:
 	sf::Color selectedText = sf::Color(255, 255, 255);
 	sf::Color accent = sf::Color(100, 100, 255);
 	sf::Color inputBox = sf::Color(255, 255, 255);
-};
 
+
+};

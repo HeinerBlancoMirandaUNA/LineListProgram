@@ -35,6 +35,7 @@ private:
 	void adjustWindow(float xSize, float ySize);
 	void tellUser(string title, string body);
 	void displayForm(sf::RenderWindow& window);
-	
+	Colors::biselA;
+
 };
 
