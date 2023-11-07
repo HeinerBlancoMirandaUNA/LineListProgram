@@ -10,7 +10,7 @@ public:
     Node(T value) : data(value), next(nullptr), previous(nullptr) {}
 };
 
-enum Position {
+enum ListPosition {
     First,
     Last,
     Next,
@@ -23,11 +23,16 @@ private:
     Node<T>* head;
     Node<T>* tail;
     Node<T>* current;
+    T dummy;
+    int listSize;
 
 public:
-    DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {}
+    DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {
+        listSize = 0;
+        std::cout << "!!!!!ListCreated" ;
+    }
 
-    void addItem(T value) {
+    void add(T value) {
         Node<T>* newNode = new Node<T>(value);
         if (!head) {
             head = newNode;
@@ -38,40 +43,47 @@ public:
             tail->next = newNode;
             tail = newNode;
         }
+        listSize++;
+
     }
 
-    void go(Position here) {
+    void del(int toDelete) {
+        go(First);
+        int counter = 1;
+        while (isValid()) {
+            if (counter == toDelete) {
+                Node<T>* temp = current;
+                current->previous->next = current->next;
+                current->next->previous = current->previous;
+                delete temp;
+                listSize--;
+                return;
+            }
+            go(Next);
+            counter++;
+        }
+        return;
+    }
+
+    void go(ListPosition here) {
         if (here == First) {current = head;}
         if (here == Last) {current = tail;}
-        if (!current) {return;};
+        if (!isValid()) {return;};
         if (here == Back) {current = current->previous;}
         if (here == Next) {current = current->next;}
     }
 
-    void print() {
-        go(First);
-        while (isValid()) {
-            std::cout << getItem() << " ";
-            go(Next);
-        }
-        std::cout << std::endl;
-    }
-
-    void reversePrint() {
-        go(Last);
-        while (isValid()) {
-            std::cout << getItem() << " ";
-            go(Back);
-        }
-        std::cout << std::endl;
-    }
-
     T getItem() {
+        if (!isValid()) { return dummy; }
         return current->data;
     }
 
     bool isValid() {
         return current;
+    }
+
+    int getSize() {
+        return listSize;
     }
 
 };
