@@ -10,6 +10,13 @@ public:
     Node(T value) : data(value), next(nullptr), previous(nullptr) {}
 };
 
+enum Position {
+    First,
+    Last,
+    Next,
+    Back
+};
+
 template <typename T>
 class DoublyLinkedList {
 private:
@@ -18,7 +25,7 @@ private:
     Node<T>* current;
 
 public:
-    DoublyLinkedList() : head(nullptr), tail(nullptr) {}
+    DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {}
 
     void addItem(T value) {
         Node<T>* newNode = new Node<T>(value);
@@ -33,22 +40,39 @@ public:
         }
     }
 
+    void go(Position here) {
+        if (here == First) {current = head;}
+        if (here == Last) {current = tail;}
+        if (!current) {return;};
+        if (here == Back) {current = current->previous;}
+        if (here == Next) {current = current->next;}
+    }
+
     void print() {
-        current = head;
-        while (current) {
-            std::cout << current->data << " ";
-            current = current->next;
+        go(First);
+        while (isValid()) {
+            std::cout << getItem() << " ";
+            go(Next);
         }
         std::cout << std::endl;
     }
 
     void reversePrint() {
-        current = tail;
-        while (current) {
-            std::cout << current->data << " ";
-            current = current->previous;
+        go(Last);
+        while (isValid()) {
+            std::cout << getItem() << " ";
+            go(Back);
         }
         std::cout << std::endl;
     }
+
+    T getItem() {
+        return current->data;
+    }
+
+    bool isValid() {
+        return current;
+    }
+
 };
 
