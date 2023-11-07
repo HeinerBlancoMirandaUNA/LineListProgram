@@ -26,6 +26,36 @@ private:
     T dummy;
     int listSize;
 
+    void deleteOperation (){
+
+        Node<T>* temp = current;
+
+        if (listSize == 1) {
+            tail = nullptr;
+            head = nullptr;
+            current = nullptr;
+
+        } else if (current->previous == nullptr) {
+            current = current->next;
+            head = current;
+            head->previous = nullptr;
+
+        } else if (current->next == nullptr) {
+
+            current = current->previous;
+            tail = current;
+            tail->next = nullptr;
+
+        } else {
+            current->previous->next = current->next;
+            current->next->previous = current->previous;
+            current = current->next;
+        }
+
+        delete temp;
+        listSize--;
+    }
+
 public:
     DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {
         listSize = 0;
@@ -52,11 +82,7 @@ public:
         int counter = 1;
         while (isValid()) {
             if (counter == toDelete) {
-                Node<T>* temp = current;
-                current->previous->next = current->next;
-                current->next->previous = current->previous;
-                delete temp;
-                listSize--;
+                deleteOperation();
                 return;
             }
             go(Next);
