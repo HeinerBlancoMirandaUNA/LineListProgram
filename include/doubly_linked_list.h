@@ -1,14 +1,6 @@
+#pragma once
 #include <iostream>
-
-template <typename T>
-class Node {
-public:
-    T data;
-    Node<T>* next;
-    Node<T>* previous;
-
-    Node(T value) : data(value), next(nullptr), previous(nullptr) {}
-};
+#include "node.h"
 
 enum ListPosition {
     First,
@@ -62,6 +54,13 @@ public:
         std::cout << "!!!!!ListCreated" ;
     }
 
+    virtual ~DoublyLinkedList() {
+        go(First);
+        while(isValid()) {
+            del(1);
+        }
+    }
+
     void add(T value) {
         Node<T>* newNode = new Node<T>(value);
         if (!head) {
@@ -113,4 +112,6 @@ public:
     }
 
 };
+
+
 
