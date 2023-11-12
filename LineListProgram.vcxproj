@@ -133,7 +133,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\box.cpp" />
+    <ClCompile Include="include\file_load_and_save.cpp" />
+    <ClCompile Include="include\user_interaction.cpp" />
+    <ClCompile Include="include\user_interface.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\box.h" />
+    <ClInclude Include="include\colors.h" />
+    <ClInclude Include="include\file_load_and_save.h" />
+    <ClInclude Include="include\user_interaction.h" />
+    <ClInclude Include="include\user_interface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
