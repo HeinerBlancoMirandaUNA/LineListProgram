@@ -63,6 +63,40 @@ public:
         }
     }
 
+    void go(ListPosition here) {
+        if (here == First) {current = head; currentPosition = 1; }
+        if (here == Last) {current = tail; currentPosition = listSize; }
+        if (!isValid()) {return;}
+        if (here == Back) {current = current->previous; currentPosition--; }
+        if (here == Next) {current = current->next; currentPosition++; }
+    }
+
+    void go(int thisPosition) {
+
+        if (isEmpty()) { return; }
+        if (thisPosition < 1) { return; }
+        if (thisPosition > listSize) { return; }
+        if (thisPosition == position()) { return; }
+
+        if (!isValid()) { go(First); }
+        if (thisPosition == 1) { go(First); return; }
+        if (thisPosition == listSize) { go(Last); return; }
+
+        int ToThere = abs(thisPosition - position());
+        int ToFirst = abs(thisPosition - 1);
+        int ToLast = abs(thisPosition - listSize);
+
+        if (ToFirst < ToThere && ToFirst < ToLast) { go(First);}
+        if (ToLast < ToThere && ToLast < ToFirst) { go(Last); }
+
+        while (thisPosition != position()) {
+            if (position() < thisPosition) { go(Next); }
+            if (position() > thisPosition) { go(Back); }
+        }
+
+    }
+
+
     void add(ListPosition here, T value) {
         if ((here == Next)or(here == Back)) { return;}
         Node<T>* newNode = new Node<T>(value);
@@ -115,38 +149,13 @@ public:
         deleteOperation();
     }
 
-    void go(ListPosition here) {
-        if (here == First) {current = head; currentPosition = 1; }
-        if (here == Last) {current = tail; currentPosition = listSize; }
-        if (!isValid()) {return;}
-        if (here == Back) {current = current->previous; currentPosition--; }
-        if (here == Next) {current = current->next; currentPosition++; }
-    }
-
-    void go(int thisPosition) {
-
-        if (isEmpty()) { return; }
-        if (thisPosition < 1) { return; }
-        if (thisPosition > listSize) { return; }
-        if (thisPosition == position()) { return; }
-
-        if (!isValid()) { go(First); }
-        if (thisPosition == 1) { go(First); return; }
-        if (thisPosition == listSize) { go(Last); return; }
-
-        int ToThere = abs(thisPosition - position());
-        int ToFirst = abs(thisPosition - 1);
-        int ToLast = abs(thisPosition - listSize);
-
-        if (ToFirst < ToThere && ToFirst < ToLast) { go(First);}
-        if (ToLast < ToThere && ToLast < ToFirst) { go(Last); }
-
-        while (thisPosition != position()) {
-            if (position() < thisPosition) { go(Next); }
-            if (position() > thisPosition) { go(Back); }
-        }
+    void del (ListPosition here) {
+        if ((here == Next)or(here == Back)) { return; }
+        if (here == First) { del(1); }
+        if (here == Last) { del(getSize()); }
 
     }
+
 
     T getItem() {
         if (!isValid()) { return dummy; }
