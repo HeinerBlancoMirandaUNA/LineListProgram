@@ -15,7 +15,7 @@ class DoublyLinkedList {
 private:
     Node<T>* head;
     Node<T>* tail;
-    Node<T>* current;
+
     T dummy;
     int listSize;
     int currentPosition;
@@ -63,6 +63,8 @@ public:
         }
     }
 
+    Node<T>* current;
+
     void go(ListPosition here) {
         if (here == First) {current = head; currentPosition = 1; }
         if (here == Last) {current = tail; currentPosition = listSize; }
@@ -97,9 +99,9 @@ public:
     }
 
 
-    void add(ListPosition here, T value) {
+    void add(ListPosition here, Node<T>* newNode) {
         if ((here == Next)or(here == Back)) { return;}
-        Node<T>* newNode = new Node<T>(value);
+
         if (!head) {
             head = newNode;
             tail = newNode;
@@ -122,14 +124,13 @@ public:
 
     }
 
-    void add(int thisPosition, T value) {
-        if (thisPosition < 1) { return; }
-        if (thisPosition > listSize + 1) { return; }
-        if (thisPosition == 1) { add(First, value); return; }
-        if (thisPosition == listSize + 1) { add(Last, value); return; }
+    void add(int thisPosition, Node<T>* newNode) {
+
+        if (thisPosition < 2) { add(First, newNode); return; }
+        if (thisPosition >= listSize + 1) { add(Last, newNode); return; }
 
         go(thisPosition);
-        Node<T>* newNode = new Node<T>(value);
+
         newNode->next = current;
         newNode->previous = current->previous;
 
@@ -139,6 +140,26 @@ public:
         current = current->previous;
         listSize++;
 
+    }
+
+    void add (ListPosition here, T value) {
+        Node<T>* newNode = new Node<T>(value);
+        add(here, newNode);
+    }
+
+    void add (int thisPosition, T value) {
+        Node<T>* newNode = new Node<T>(value);
+        add(thisPosition, newNode);
+    }
+
+    void add (ListPosition here) {
+        Node<T>* newNode = new Node<T>();
+        add(here, newNode);
+    }
+
+    void add (int thisPosition) {
+        Node<T>* newNode = new Node<T>();
+        add(thisPosition, newNode);
     }
 
     void del(int toDelete) {

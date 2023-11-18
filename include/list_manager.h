@@ -4,7 +4,7 @@
 #include "math.h"
 #include <SFML/Graphics.hpp>
 
-class Loader
+class ListManager
 {
 private:
 	sf::RectangleShape rectangle;
@@ -12,9 +12,9 @@ private:
 	
 
 public:
-	Loader();
-	virtual ~Loader();
-	DoublyLinkedList<Point> List;
+	ListManager();
+	virtual ~ListManager();
+	DoublyLinkedList<DoublyLinkedList<Point>> List;
 	void drawPoint(sf::RenderWindow& window, Point A);
 	void drawLine(sf::RenderWindow& window, Point A, Point B);
 	void renderList(sf::RenderWindow &window);

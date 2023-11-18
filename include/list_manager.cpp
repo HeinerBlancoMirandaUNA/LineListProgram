@@ -1,18 +1,21 @@
-#include "./loader.h"
+#include "./list_manager.h"
 
-Loader::Loader() {
+ListManager::ListManager() {
 	
 }
 
-Loader::~Loader() {
+ListManager::~ListManager() {
 
 }
 
-void Loader::drawPoint(sf::RenderWindow& window, Point A) {
+void ListManager::drawPoint(sf::RenderWindow& window, Point A) {
+
+	float Ax = static_cast<float>(A.x);
+	float Ay = static_cast<float>(A.y);
 	
 	circle.setScale(1,1);
-	circle.setRadius(20);
-	circle.setPosition(A.x, A.y);
+	circle.setRadius(19);
+	circle.setPosition(Ax, Ay);
 	circle.move(-circle.getRadius(), -circle.getRadius());
 	
 	circle.setFillColor(sf::Color(45,0,45));
@@ -28,12 +31,17 @@ void Loader::drawPoint(sf::RenderWindow& window, Point A) {
 	window.draw(circle);
 }
 
-void Loader::drawLine(sf::RenderWindow& window, Point A, Point B) {
-	rectangle.setPosition(A.x, A.y);
+void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 	
+	float Ax = static_cast<float>(A.x);
+	float Ay = static_cast<float>(A.y);
+	float Bx = static_cast<float>(B.x);
+	float By = static_cast<float>(B.y);
+	
+	rectangle.setPosition(Ax, Ay);
 
-	float distX = A.x - B.x; 
-	float distY = A.y - B.y; 
+	float distX = Ax - B.x; 
+	float distY = Ay - B.y; 
 	float angle = -90;
 	if (distX > 0.9 || distX < -0.9 ) {
 		angle = ((atanf(distY / distX)) * 57.295779) + 180;
@@ -41,7 +49,6 @@ void Loader::drawLine(sf::RenderWindow& window, Point A, Point B) {
 	} else if (distY < 0) {
 		angle = 90;
 	}
-	std::cout << angle << std::endl;
  
 	distX = distX * distX;
 	distY = distY * distY;

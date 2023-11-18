@@ -19,6 +19,7 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		action = Menu(window, { "Agregar punto" ,"Ocultar/Mostrar","Cambiar color...","Renombrar","Duplicar","Borrar"});
 		User.clickL = false;
 
+		if (action == 0) { ; }
 		if (action == 2) { Form = ColorSelector; }
 		if (action == 3) { Form = Rename; }
 
@@ -79,6 +80,13 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 void MainInterface::update(sf::RenderWindow& window) {
 
+	Point test, testb;
+	test.x = User.x; test.y = User.y;
+	testb.x = 200; testb.y = 200;
+	drawLine(window, testb, test);
+	drawPoint(window, testb);
+	drawPoint(window, test);
+
 	drawSidebars(window);
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 
@@ -90,13 +98,8 @@ void MainInterface::update(sf::RenderWindow& window) {
 		WindowForm.x = User.x; WindowForm.y = User.y;
 	}
 
-	Point test, testb;
-	test.x = User.x; test.y = User.y;
-	drawPoint(window,test);
-
-	testb.x = 200; testb.y = 200;
-	drawPoint(window, testb);
-	drawLine(window, testb, test);
+	
+	
 
 	holdButton(window);
 	if (action == 0) { Form = OpenFile; }

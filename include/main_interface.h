@@ -1,8 +1,8 @@
 #pragma once
-#include "loader.h"
+#include "list_manager.h"
 #include "base_interface.h"
 
-class MainInterface : public Loader, BaseInterface
+class MainInterface : public ListManager, BaseInterface
 {
 public:
 	MainInterface(sf::RenderWindow& window);
