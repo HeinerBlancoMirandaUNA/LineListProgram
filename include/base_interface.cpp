@@ -100,12 +100,17 @@ void BaseInterface::tellUser(string title, string body) {
 	Form = InfoDialog;
 }
 
-void BaseInterface::drawSidebars(sf::RenderWindow& window) {
+bool BaseInterface::drawSidebars(sf::RenderWindow& window) {
+	bool toReturn;
 	float toolbarHeight = 32;
 	Deco.x = 0; Deco.y = 0;
 	Deco.xSize = User.width; Deco.ySize = toolbarHeight; Deco.draw(window);
+	toReturn = Deco.isTouching(User);
+
 	Deco.y = toolbarHeight;
 	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
+	if (!toReturn) { toReturn = Deco.isTouching(User); }
+	return toReturn;
 }
 
 

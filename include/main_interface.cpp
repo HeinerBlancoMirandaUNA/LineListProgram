@@ -11,17 +11,29 @@ MainInterface:: ~MainInterface() {
 void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	int action = -1;
-	if (Form == Hide) { return; }
+	if (Form == Hide) { 
+		lastPointPosition = collidingWith(User);
+		lastPoint.x = User.x; lastPoint.y = User.y;
+		return; 
+	}
 
 	// Context Menus
 
 	if (Form == ContextMenu) {
-		action = Menu(window, { "Agregar punto" ,"Ocultar/Mostrar","Cambiar color...","Renombrar","Duplicar","Borrar"});
+		
+		string firstOption = "Agregar punto";
+		if (lastPointPosition > 0) { firstOption = "Borrar punto"; }
+		action = Menu(window, { firstOption ,"Ocultar/Mostrar","Cambiar color...","Renombrar","Nueva ruta","Borrar ruta"});
 		User.clickL = false;
 
-		if (action == 0) { ; }
+		if (action == 0) {
+			if (lastPointPosition > 0) { delPoint(lastPointPosition);  }
+			else { addPoint(lastPoint); }
+		}
 		if (action == 2) { Form = ColorSelector; }
 		if (action == 3) { Form = Rename; }
+		if (action == 4) { List.add(Last); position = List.getSize(); }
+		if (action == 5) { List.del(Last); position = List.getSize(); }
 
 		return;
 	}
@@ -80,27 +92,29 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 void MainInterface::update(sf::RenderWindow& window) {
 
-	Point test, testb;
-	test.x = User.x; test.y = User.y;
-	testb.x = 200; testb.y = 200;
-	drawLine(window, testb, test);
-	drawPoint(window, testb);
-	drawPoint(window, test);
+	renderList(window);
 
-	drawSidebars(window);
+	bool touchingSidebars = drawSidebars(window);	
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 
+	if (User.clickL && Form==Hide && !touchingSidebars) {
+		
+		addPoint(lastPoint);
+	}
 	User.update(window);
 	displayForm(window);
 
 	if (User.clickR && Form == Hide) {
-		Form = ContextMenu;
-		WindowForm.x = User.x; WindowForm.y = User.y;
+		if (touchingSidebars) {
+			
+		}
+		else {
+			Form = ContextMenu;
+			WindowForm.x = User.x; WindowForm.y = User.y;
+		}
+		
 	}
-
 	
-	
-
 	holdButton(window);
 	if (action == 0) { Form = OpenFile; }
 	if (action == 1) { Form = SaveFile; }

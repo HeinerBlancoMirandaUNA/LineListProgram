@@ -7,17 +7,21 @@
 class ListManager
 {
 private:
+
 	sf::RectangleShape rectangle;
 	sf::CircleShape circle;
-	
+	void drawPoint(sf::RenderWindow& window, Point A);
+	void drawLine(sf::RenderWindow& window, Point A, Point B);	
 
 public:
 	ListManager();
 	virtual ~ListManager();
+	int position;
 	DoublyLinkedList<DoublyLinkedList<Point>> List;
-	void drawPoint(sf::RenderWindow& window, Point A);
-	void drawLine(sf::RenderWindow& window, Point A, Point B);
 	void renderList(sf::RenderWindow &window);
+	void addPoint(Point A);
+	void delPoint(int position);
+	int collidingWith(UserInteraction& User);
 
 };
 

@@ -7,6 +7,6 @@ public:
 	Point();
 	virtual ~Point();
 	int x, y;
-	bool isTouching(UserInteraction& User);
+	bool isTouching(UserInteraction& User, int radius);
 };
 

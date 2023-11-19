@@ -8,6 +8,7 @@ enum UiForm {
 	Hide,
 	InfoDialog,
 	ContextMenu,
+	ContextList,
 	YesNoDialog,
 	OpenFile,
 	SaveFile,
@@ -37,7 +38,7 @@ protected:
 	void adjustWindow(float xSize, float ySize);
 	void tellUser(string title, string body);
 	
-	void drawSidebars(sf::RenderWindow& window);
+	bool drawSidebars(sf::RenderWindow& window);
 	Colors::biselA;
 
 };

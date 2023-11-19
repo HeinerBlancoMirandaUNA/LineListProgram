@@ -9,7 +9,9 @@ public:
 	virtual ~MainInterface();
 	void update(sf::RenderWindow& window);
 
-private: 
+private:
+	int lastPointPosition;
+	Point lastPoint;
 	void displayForm(sf::RenderWindow& window);
 };
 
