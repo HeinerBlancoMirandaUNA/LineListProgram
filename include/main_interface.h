@@ -14,5 +14,7 @@ private:
 	Point lastPoint;
 	bool dragPoint;
 	void displayForm(sf::RenderWindow& window);
+	void routeSelector(sf::RenderWindow& window);
+	Box RouteItem;
 };
 

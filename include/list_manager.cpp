@@ -1,7 +1,7 @@
 #include "./list_manager.h"
 
 ListManager::ListManager() {
-	Routes.add(First);
+	newRoute();
 	currentRoute = 1;
 }
 
@@ -9,13 +9,13 @@ ListManager::~ListManager() {
 
 }
 
-void ListManager::drawPoint(sf::RenderWindow& window, Point A) {
+void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 
 	float Ax = static_cast<float>(A.x);
 	float Ay = static_cast<float>(A.y);
 	
 	circle.setScale(1,1);
-	circle.setRadius(circleRadius);
+	circle.setRadius(radius);
 	circle.setPosition(Ax, Ay);
 	circle.move(-circle.getRadius(), -circle.getRadius());
 	
@@ -25,11 +25,12 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A) {
 	circle.setRadius(circle.getRadius() -1);
 	window.draw(circle);
 
-	circle.setFillColor(sf::Color::White);
+	circle.setFillColor(sf::Color(255,255,230,230));
 	circle.setRadius(circle.getRadius() / 4);
 	circle.setScale(0.75, 1.25);
 	circle.move(circle.getRadius() * 1.25, circle.getRadius());
 	window.draw(circle);
+	circle.setFillColor(sf::Color::White);
 }
 
 void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
@@ -81,10 +82,11 @@ void ListManager::renderList(sf::RenderWindow& window) {
 		Routes.current->data.go(First);
 		while (Routes.current->data.isValid()) {
 			A = Routes.current->data.getItem();
-			drawPoint(window, A);
+			drawPoint(window, A, circleRadius);
 			Routes.current->data.go(Next);
 		}
 		Routes.go(Next);
+		
 	}
 
 	Routes.current = temp;
@@ -93,8 +95,10 @@ void ListManager::renderList(sf::RenderWindow& window) {
 
 void ListManager::addPoint(Point A) {
 	Routes.go(currentRoute);
+	
 	if (!Routes.isValid()) { return; }
 	Routes.current->data.add(Last, A);
+	
 }
 
 void  ListManager::delPoint(int thisPosition) {
@@ -103,17 +107,35 @@ void  ListManager::delPoint(int thisPosition) {
 	Routes.current->data.del(thisPosition);
 }
 
-void ListManager::setPoint(int thisPosition, Point A) {
+void ListManager::setPoint(sf::RenderWindow& window,int thisPosition, Point A) {
 	Routes.go(currentRoute);
 	if (!Routes.isValid()) { return; }
 	Routes.current->data.go(thisPosition);
 	Routes.current->data.setItem(A);
+	drawPoint(window, A, 20);
 }
 
 void ListManager::undoPoint() {
 	Routes.go(currentRoute);
 	if (!Routes.isValid()) { return; }
 	Routes.current->data.del(Last);
+}
+
+void ListManager::delRoute() {
+
+	Routes.del(currentRoute);
+	Metadata.del(currentRoute);
+	if (currentRoute > Routes.getSize()) {
+		currentRoute = Routes.getSize();
+	}
+	
+}
+
+void ListManager::newRoute() {
+	Routes.add(Last); 
+	Metadata.add(Last);
+	currentRoute = Routes.getSize();
+	
 }
 
 int ListManager::collidingWith(UserInteraction& User) {
@@ -128,6 +150,7 @@ int ListManager::collidingWith(UserInteraction& User) {
 		if (Routes.current->data.getItem().isTouching(User, circleRadius)) { toReturn = inPosition; }
 		Routes.current->data.go(Next);
 		inPosition++;
+		
 	}
 	
 	Routes.go(Next);

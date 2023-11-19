@@ -88,8 +88,9 @@ public:
         int ToFirst = abs(thisPosition - 1);
         int ToLast = abs(thisPosition - listSize);
 
-        if (ToFirst < ToThere && ToFirst < ToLast) { go(First);}
+        if (ToFirst < ToThere && ToFirst < ToLast) { go(First); }
         if (ToLast < ToThere && ToLast < ToFirst) { go(Last); }
+        if (ToFirst == ToLast) { go(First); }
 
         while (thisPosition != position()) {
             if (position() < thisPosition) { go(Next); }

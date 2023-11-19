@@ -10,6 +10,28 @@ MainInterface:: ~MainInterface() {
 
 }
 
+void MainInterface::routeSelector(sf::RenderWindow& window) {
+	RouteItem.press();
+	RouteItem.setPressedColor(accent);
+	RouteItem.forceWhite();
+	float spacing = 5;
+	RouteItem.x = Deco.x + spacing;
+	RouteItem.y = Deco.y + spacing;
+	RouteItem.xSize = Deco.xSize - (spacing*2);
+
+	Metadata.go(First);
+	while (Metadata.isValid()) {
+		RouteItem.release();
+		if (RouteItem.isTouching(User)&&User.clickL) { currentRoute = Metadata.position(); }
+		if (Metadata.position() == currentRoute) { RouteItem.press(); }
+		RouteItem.label = Metadata.getItem().name;
+		RouteItem.draw(window);
+		RouteItem.y = RouteItem.y + (RouteItem.ySize + spacing);
+		Metadata.go(Next);
+		
+	}
+}
+
 void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	int action = -1;
@@ -37,9 +59,12 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		if (action == 1) { undoPoint(); }
 
 		if (action == 3) { Form = ColorSelector; }
-		if (action == 4) { Form = Rename; }
-		if (action == 5) { Routes.add(Last); currentRoute = Routes.getSize(); }
-		if (action == 6) { Routes.del(Last); currentRoute = Routes.getSize(); }
+		if (action == 4) { 
+			Metadata.go(currentRoute);
+			RenameInput.label = Metadata.getItem().name; 
+			Form = Rename; }
+		if (action == 5) { newRoute(); }
+		if (action == 6) { delRoute(); }
 
 		return;
 	}
@@ -83,6 +108,12 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, { "Renombrar","Cancelar" });
 		RenameInput.textField(WindowForm, 68, User);
 		RenameInput.draw(window);
+		if (action == 0) {
+			Metadata.go(currentRoute);
+			RouteInfo toReplace = Metadata.getItem();
+			toReplace.name = RenameInput.label;
+			Metadata.setItem(toReplace);
+		}
 	}
 
 	if (Form == ColorSelector) {
@@ -100,15 +131,18 @@ void MainInterface::update(sf::RenderWindow& window) {
 
 	renderList(window);
 
-	bool touchingSidebars = drawSidebars(window);	
-	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
-
 	if (dragPoint) {
-		if (User.released) { dragPoint = false; }
-		setPoint(lastPointPosition, lastPoint);
+		if (User.clickL) { dragPoint = false; }
+		setPoint(window, lastPointPosition, lastPoint);
 		User.clickL = false;
 		User.clickR = false;
 	}
+
+	bool touchingSidebars = drawSidebars(window);
+
+	routeSelector(window);
+
+	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 
 	if (User.clickL && Form==Hide && !touchingSidebars) {
 		if (lastPointPosition > 0) { dragPoint = true; }
