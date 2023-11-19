@@ -7,8 +7,8 @@ using std::vector;
 enum UiForm {
 	Hide,
 	InfoDialog,
-	ContextMenu,
-	ContextList,
+	MenuCurrentRoute,
+	MenuRoutes,
 	YesNoDialog,
 	OpenFile,
 	SaveFile,

@@ -12,6 +12,7 @@ public:
 private:
 	int lastPointPosition;
 	Point lastPoint;
+	bool dragPoint;
 	void displayForm(sf::RenderWindow& window);
 };
 

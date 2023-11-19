@@ -2,6 +2,8 @@
 
 MainInterface::MainInterface(sf::RenderWindow& window) {
 	resetInterface(window);
+	dragPoint = false;
+	lastPointPosition = 1;
 }
 
 MainInterface:: ~MainInterface() {
@@ -12,28 +14,32 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	int action = -1;
 	if (Form == Hide) { 
-		lastPointPosition = collidingWith(User);
+		if (!dragPoint) { lastPointPosition = collidingWith(User); }
 		lastPoint.x = User.x; lastPoint.y = User.y;
 		return; 
 	}
 
 	// Context Menus
 
-	if (Form == ContextMenu) {
+	string showOrHide = "Ocultar/Mostrar";
+
+	if (Form == MenuCurrentRoute) {
 		
 		string firstOption = "Agregar punto";
 		if (lastPointPosition > 0) { firstOption = "Borrar punto"; }
-		action = Menu(window, { firstOption ,"Ocultar/Mostrar","Cambiar color...","Renombrar","Nueva ruta","Borrar ruta"});
+		action = Menu(window, { firstOption , "Borrar último" , showOrHide ,"Cambiar color...","Renombrar","Nueva ruta","Borrar ruta"});
 		User.clickL = false;
 
 		if (action == 0) {
 			if (lastPointPosition > 0) { delPoint(lastPointPosition);  }
 			else { addPoint(lastPoint); }
 		}
-		if (action == 2) { Form = ColorSelector; }
-		if (action == 3) { Form = Rename; }
-		if (action == 4) { List.add(Last); position = List.getSize(); }
-		if (action == 5) { List.del(Last); position = List.getSize(); }
+		if (action == 1) { undoPoint(); }
+
+		if (action == 3) { Form = ColorSelector; }
+		if (action == 4) { Form = Rename; }
+		if (action == 5) { Routes.add(Last); currentRoute = Routes.getSize(); }
+		if (action == 6) { Routes.del(Last); currentRoute = Routes.getSize(); }
 
 		return;
 	}
@@ -97,9 +103,16 @@ void MainInterface::update(sf::RenderWindow& window) {
 	bool touchingSidebars = drawSidebars(window);	
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
 
+	if (dragPoint) {
+		if (User.released) { dragPoint = false; }
+		setPoint(lastPointPosition, lastPoint);
+		User.clickL = false;
+		User.clickR = false;
+	}
+
 	if (User.clickL && Form==Hide && !touchingSidebars) {
-		
-		addPoint(lastPoint);
+		if (lastPointPosition > 0) { dragPoint = true; }
+		else { addPoint(lastPoint); }
 	}
 	User.update(window);
 	displayForm(window);
@@ -109,7 +122,7 @@ void MainInterface::update(sf::RenderWindow& window) {
 			
 		}
 		else {
-			Form = ContextMenu;
+			Form = MenuCurrentRoute;
 			WindowForm.x = User.x; WindowForm.y = User.y;
 		}
 		

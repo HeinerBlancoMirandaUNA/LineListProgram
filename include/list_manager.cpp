@@ -1,8 +1,8 @@
 #include "./list_manager.h"
 
 ListManager::ListManager() {
-	List.add(First);
-	position = 1;
+	Routes.add(First);
+	currentRoute = 1;
 }
 
 ListManager::~ListManager() {
@@ -15,7 +15,7 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A) {
 	float Ay = static_cast<float>(A.y);
 	
 	circle.setScale(1,1);
-	circle.setRadius(19);
+	circle.setRadius(circleRadius);
 	circle.setPosition(Ax, Ay);
 	circle.move(-circle.getRadius(), -circle.getRadius());
 	
@@ -61,66 +61,76 @@ void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 }
 
 void ListManager::renderList(sf::RenderWindow& window) {
-	auto temp = List.current;
+	auto temp = Routes.current;
 	Point A, B;
 
-	List.go(First);
+	Routes.go(First);
 
-	while (List.isValid()) {
-		List.current->data.go(First);
-		while (List.current->data.isValid() && List.current->data.getSize() > 1) {
-			A = List.current->data.getItem();
-			List.current->data.go(Next);
-			if (!List.current->data.isValid()) { break; }
-			B = List.current->data.getItem();
-			List.current->data.go(Back);
+	while (Routes.isValid()) {
+		Routes.current->data.go(First);
+		while (Routes.current->data.isValid() && Routes.current->data.getSize() > 1) {
+			A = Routes.current->data.getItem();
+			Routes.current->data.go(Next);
+			if (!Routes.current->data.isValid()) { break; }
+			B = Routes.current->data.getItem();
+			Routes.current->data.go(Back);
 			drawLine(window, A, B);
-			List.current->data.go(Next);
+			Routes.current->data.go(Next);
 		}
 
-		List.current->data.go(First);
-		while (List.current->data.isValid()) {
-			A = List.current->data.getItem();
+		Routes.current->data.go(First);
+		while (Routes.current->data.isValid()) {
+			A = Routes.current->data.getItem();
 			drawPoint(window, A);
-			List.current->data.go(Next);
+			Routes.current->data.go(Next);
 		}
-		List.go(Next);
+		Routes.go(Next);
 	}
 
-	List.current = temp;
+	Routes.current = temp;
 
 }
 
 void ListManager::addPoint(Point A) {
-	List.go(position);
-	if (!List.isValid()) { return; }
-	List.current->data.add(Last, A);
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return; }
+	Routes.current->data.add(Last, A);
 }
 
 void  ListManager::delPoint(int thisPosition) {
-	List.go(position);
-	if (!List.isValid()) { return; }
-	List.current->data.del(thisPosition);
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return; }
+	Routes.current->data.del(thisPosition);
+}
+
+void ListManager::setPoint(int thisPosition, Point A) {
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return; }
+	Routes.current->data.go(thisPosition);
+	Routes.current->data.setItem(A);
+}
+
+void ListManager::undoPoint() {
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return; }
+	Routes.current->data.del(Last);
 }
 
 int ListManager::collidingWith(UserInteraction& User) {
-	//auto temp = List.current;
 	int toReturn = -1;
 
-	List.go(position);
-	if (!List.isValid()) { return toReturn; }
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return toReturn; }
 	int inPosition = 1;
 	
-	List.current->data.go(First);
-	while (List.current->data.isValid()) {
-		if (List.current->data.getItem().isTouching(User, 20)) { toReturn = inPosition; }
-		List.current->data.go(Next);
+	Routes.current->data.go(First);
+	while (Routes.current->data.isValid()) {
+		if (Routes.current->data.getItem().isTouching(User, circleRadius)) { toReturn = inPosition; }
+		Routes.current->data.go(Next);
 		inPosition++;
 	}
 	
-	List.go(Next);
-
-	//List.current = temp;
+	Routes.go(Next);
 	return toReturn;
 
 }

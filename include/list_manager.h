@@ -8,6 +8,7 @@ class ListManager
 {
 private:
 
+	static const int circleRadius = 10;
 	sf::RectangleShape rectangle;
 	sf::CircleShape circle;
 	void drawPoint(sf::RenderWindow& window, Point A);
@@ -16,11 +17,13 @@ private:
 public:
 	ListManager();
 	virtual ~ListManager();
-	int position;
-	DoublyLinkedList<DoublyLinkedList<Point>> List;
+	int currentRoute;
+	DoublyLinkedList<DoublyLinkedList<Point>> Routes;
 	void renderList(sf::RenderWindow &window);
 	void addPoint(Point A);
-	void delPoint(int position);
+	void delPoint(int thisPosition);
+	void setPoint(int thisPosition, Point A);
+	void undoPoint();
 	int collidingWith(UserInteraction& User);
 
 };
