@@ -72,6 +72,35 @@ int BaseInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 
 }
 
+sf::Color BaseInterface::colorPicker(sf::RenderWindow& window) {
+	ColorPick.press();
+	float resetX = WindowForm.x + 10;
+	ColorPick.x = resetX;
+	ColorPick.y = WindowForm.y + 40;
+	ColorPick.xSize = 20; ColorPick.ySize = 20;
+	int red = 0; int green = 0; int blue = 0;
+
+	sf::Color toReturn(sf::Color::Black);
+
+	for (int y = 0; y < 5; y++) {
+		red = red + 42;
+
+		for (int x = 0; x < 18; x++) {
+			blue = blue + 42;
+			sf::Color option(red, green, blue % 255);
+			ColorPick.setPressedColor(option);
+			ColorPick.draw(window);
+			if (ColorPick.isTouching(User) && User.clickL) { toReturn = option; }
+			if (x % 6 == 0) { green = green + 85; }
+			ColorPick.x = ColorPick.x + ColorPick.xSize;
+		}
+		ColorPick.x = resetX; green = 0;
+		ColorPick.y = ColorPick.y + ColorPick.ySize;
+	}
+
+	return toReturn;
+}
+
 void BaseInterface::holdButton(sf::RenderWindow& window) {
 	LastPressed.draw(window);
 	if (LastPressed.isPressed()) {

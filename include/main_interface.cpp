@@ -32,35 +32,6 @@ void MainInterface::routeSelector(sf::RenderWindow& window) {
 	}
 }
 
-sf::Color MainInterface::drawColorPicker(sf::RenderWindow& window) {
-	ColorPick.press();
-	float resetX = WindowForm.x + 10;
-	ColorPick.x = resetX;
-	ColorPick.y = WindowForm.y + 40;
-	ColorPick.xSize = 20; ColorPick.ySize = 20;
-	int red = 0; int green = 0; int blue = 0;
-
-	sf::Color toReturn(sf::Color::Black);
-
-	for (int y = 0; y < 5; y++) {
-		red = red + 42;
-		
-		for (int x = 0; x < 18; x++) {
-			blue = blue + 42;
-			sf::Color option(red, green, blue % 255);
-			ColorPick.setPressedColor(option);
-			ColorPick.draw(window);
-			if (ColorPick.isTouching(User) && User.clickL) { toReturn = option; }
-			if (x % 6 == 0) { green = green + 85; }
-			ColorPick.x = ColorPick.x + ColorPick.xSize;
-		}
-		ColorPick.x = resetX; green = 0;
-		ColorPick.y = ColorPick.y + ColorPick.ySize;
-	}
-	
-	return toReturn;
-}
-
 void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	int action = -1;
@@ -76,11 +47,32 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	Metadata.go(currentRoute);
 	if (Metadata.getItem().isVisible) { showOrHide = "Ocultar"; };
 
+	if (Form == MenuNothing) {
+		action = Menu(window,{ "Nueva ruta"});
+		if (action == 0) { newRoute(); }
+		User.clickL = false;
+		return;
+	}
+
+	if (Form == MenuSidebar) {
+		action = Menu(window, { "Renombrar","Cambiar color...","Nueva ruta","Borrar ruta" });
+		if (action == 0) {
+			Metadata.go(currentRoute);
+			RenameInput.label = Metadata.getItem().name;
+			Form = Rename;
+		}
+		if (action == 1) { Form = ColorSelector; }
+		if (action == 2) { newRoute(); }
+		if (action == 3) { delRoute(); }
+		User.clickL = false;
+		return;
+	}
+
 	if (Form == MenuCurrentRoute) {
 		
 		string firstOption = "Agregar punto";
 		if (lastPointPosition > 0) { firstOption = "Borrar punto"; }
-		action = Menu(window, { firstOption , "Borrar último" , showOrHide ,"Cambiar color...","Renombrar","Nueva ruta","Borrar ruta"});
+		action = Menu(window, { firstOption , "Borrar último" , showOrHide ,"Renombrar","Cambiar color...","Nueva ruta","Borrar ruta"});
 		User.clickL = false;
 
 		if (action == 0) {
@@ -91,11 +83,12 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		if (action == 2) { 
 			showHide();
 		}
-		if (action == 3) { Form = ColorSelector; }
-		if (action == 4) { 
+		if (action == 3) { 
 			Metadata.go(currentRoute);
-			RenameInput.label = Metadata.getItem().name; 
-			Form = Rename; }
+			RenameInput.label = Metadata.getItem().name;
+			Form = Rename;
+		}
+		if (action == 4) {	Form = ColorSelector; }
 		if (action == 5) { newRoute(); }
 		if (action == 6) { delRoute(); }
 
@@ -152,7 +145,7 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	if (Form == ColorSelector) {
 		Title.label = "Seleccione un color";
 		action = Toolbar(window, tX, tY, { "Listo", "Al azar"});
-		sf::Color NewColor(drawColorPicker(window));
+		sf::Color NewColor(colorPicker(window));
 
 		if (NewColor != sf::Color::Black) {
 			Metadata.go(currentRoute);
@@ -208,10 +201,12 @@ void MainInterface::update(sf::RenderWindow& window) {
 
 	if (User.clickR && Form == Hide && !dragPoint) {
 		if (touchingSidebars) {
-			
+			Form = MenuSidebar;
+			WindowForm.x = User.x; WindowForm.y = User.y;
 		}
 		else {
-			Form = MenuCurrentRoute;
+			Form = MenuNothing;
+			if (Routes.getSize() > 0) { Form = MenuCurrentRoute; }
 			WindowForm.x = User.x; WindowForm.y = User.y;
 		}
 		

@@ -8,7 +8,8 @@ enum UiForm {
 	Hide,
 	InfoDialog,
 	MenuCurrentRoute,
-	MenuRoutes,
+	MenuSidebar,
+	MenuNothing,
 	YesNoDialog,
 	OpenFile,
 	SaveFile,
@@ -26,12 +27,12 @@ public:
 protected:
 
 	UserInteraction User;
-	Box Deco, Button, Info, LastPressed, FileInput, RenameInput, WindowForm, Title;
+	Box Deco, Button, Info, LastPressed, FileInput, RenameInput, WindowForm, Title, ColorPick;;
 	UiForm Form;
 
 	int Toolbar(sf::RenderWindow& window, float x, float y, vector<string> arguments);
 	int Menu(sf::RenderWindow& window, vector<string> arguments);
-	
+	sf::Color colorPicker(sf::RenderWindow& window);
 
 	void resetInterface(sf::RenderWindow& window);
 	void holdButton(sf::RenderWindow& window);
