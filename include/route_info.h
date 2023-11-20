@@ -9,7 +9,8 @@ public:
 	RouteInfo();
 	virtual ~RouteInfo();
 	string name;
-	sf::Color color;
+	int lineLight;
+	sf::Uint8 red, green, blue, line;
 	bool isVisible;
 
 };

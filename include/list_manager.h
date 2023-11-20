@@ -10,10 +10,11 @@ class ListManager
 private:
 
 	static const int circleRadius = 10;
-	sf::RectangleShape rectangle;
+	sf::RectangleShape line;
 	sf::CircleShape circle;
 	void drawPoint(sf::RenderWindow& window, Point A, int radius);
-	void drawLine(sf::RenderWindow& window, Point A, Point B);	
+	void drawLine(sf::RenderWindow& window, Point A, Point B);
+	void drawCurrentRoute(sf::RenderWindow& window);
 
 public:
 	ListManager();
@@ -27,6 +28,7 @@ public:
 	void setPoint(sf::RenderWindow& window, int thisPosition, Point A);
 	void delRoute();
 	void newRoute();
+	void showHide();
 	void undoPoint();
 	int collidingWith(UserInteraction& User);
 

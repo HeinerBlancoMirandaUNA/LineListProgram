@@ -22,7 +22,7 @@ void MainInterface::routeSelector(sf::RenderWindow& window) {
 	Metadata.go(First);
 	while (Metadata.isValid()) {
 		RouteItem.release();
-		if (RouteItem.isTouching(User)&&User.clickL) { currentRoute = Metadata.position(); }
+		if (RouteItem.isTouching(User) && User.clickL) { currentRoute = Metadata.position(); User.clickL = false; }
 		if (Metadata.position() == currentRoute) { RouteItem.press(); }
 		RouteItem.label = Metadata.getItem().name;
 		RouteItem.draw(window);
@@ -43,7 +43,9 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	// Context Menus
 
-	string showOrHide = "Ocultar/Mostrar";
+	string showOrHide = "Mostrar";
+	Metadata.go(currentRoute);
+	if (Metadata.getItem().isVisible) { showOrHide = "Ocultar"; };
 
 	if (Form == MenuCurrentRoute) {
 		
@@ -57,7 +59,9 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 			else { addPoint(lastPoint); }
 		}
 		if (action == 1) { undoPoint(); }
-
+		if (action == 2) { 
+			showHide();
+		}
 		if (action == 3) { Form = ColorSelector; }
 		if (action == 4) { 
 			Metadata.go(currentRoute);
@@ -131,6 +135,8 @@ void MainInterface::update(sf::RenderWindow& window) {
 
 	renderList(window);
 
+	Metadata.go(currentRoute);	bool currentIsVisible = Metadata.getItem().isVisible;
+
 	if (dragPoint) {
 		if (User.clickL) { dragPoint = false; }
 		setPoint(window, lastPointPosition, lastPoint);
@@ -139,19 +145,22 @@ void MainInterface::update(sf::RenderWindow& window) {
 	}
 
 	bool touchingSidebars = drawSidebars(window);
-
-	routeSelector(window);
-
 	int action = Toolbar(window, 4, 4, { "Abrir","Guardar","Ayuda","Salir" });
-
+	routeSelector(window);
+	
 	if (User.clickL && Form==Hide && !touchingSidebars) {
-		if (lastPointPosition > 0) { dragPoint = true; }
-		else { addPoint(lastPoint); }
+		if (currentIsVisible) {
+			if (lastPointPosition > 0) { dragPoint = true; }
+			else { addPoint(lastPoint); }
+		}
+		else {
+			tellUser("No se puede editar", "La ruta actual se encuentra oculta");
+		}
 	}
 	User.update(window);
 	displayForm(window);
 
-	if (User.clickR && Form == Hide) {
+	if (User.clickR && Form == Hide && !dragPoint) {
 		if (touchingSidebars) {
 			
 		}

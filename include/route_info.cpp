@@ -3,7 +3,10 @@
 RouteInfo::RouteInfo() {
 	isVisible = true;
 	name = "Nueva Ruta";
-	color = sf::Color(255,255,255);
+	red = 255;
+	green = 255;
+	blue = 255;
+	line = 0;
 }
 
 RouteInfo::~RouteInfo() {

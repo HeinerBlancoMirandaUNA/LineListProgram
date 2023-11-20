@@ -40,7 +40,7 @@ void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 	float Bx = static_cast<float>(B.x);
 	float By = static_cast<float>(B.y);
 	
-	rectangle.setPosition(Ax, Ay);
+	line.setPosition(Ax, Ay);
 
 	float distX = Ax - B.x; 
 	float distY = Ay - B.y; 
@@ -55,38 +55,56 @@ void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 	distX = distX * distX;
 	distY = distY * distY;
 	float distance = sqrt(distX + distY);
-	rectangle.setSize(sf::Vector2f(distance,5));
-	rectangle.setOrigin(0,rectangle.getSize().y/2);
-	rectangle.setRotation(angle);
-	window.draw(rectangle);
+	line.setSize(sf::Vector2f(distance,5));
+	line.setOrigin(0, line.getSize().y/2);
+	line.setRotation(angle);
+	window.draw(line);
+}
+
+void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
+	if (!Routes.isValid()) { return; }
+	Point A, B;
+	int& lineLigth = Metadata.current->data.lineLight;
+	sf::Uint8 ligth = lineLigth;
+	line.setFillColor((sf::Color(ligth, ligth, ligth)));
+	if (currentRoute == Routes.position()) {
+		if (lineLigth < 255) { lineLigth = lineLigth + 10; }
+		if (lineLigth >= 255) { lineLigth = 255; }
+	}
+	else {
+		if (lineLigth > 0) { lineLigth = lineLigth - 10; }
+		if (lineLigth <= 0) { lineLigth = 0; }
+	}
+
+	Routes.current->data.go(First);
+	while (Routes.current->data.isValid() && Routes.current->data.getSize() > 1) {
+		A = Routes.current->data.getItem();
+		Routes.current->data.go(Next);
+		if (!Routes.current->data.isValid()) { break; }
+		B = Routes.current->data.getItem();
+		Routes.current->data.go(Back);
+		drawLine(window, A, B);
+		Routes.current->data.go(Next);
+	}
+
+	Routes.current->data.go(First);
+	while (Routes.current->data.isValid()) {
+		A = Routes.current->data.getItem();
+		drawPoint(window, A, circleRadius);
+		Routes.current->data.go(Next);
+	}
 }
 
 void ListManager::renderList(sf::RenderWindow& window) {
 	auto temp = Routes.current;
-	Point A, B;
 
 	Routes.go(First);
-
+	Metadata.go(First);
 	while (Routes.isValid()) {
-		Routes.current->data.go(First);
-		while (Routes.current->data.isValid() && Routes.current->data.getSize() > 1) {
-			A = Routes.current->data.getItem();
-			Routes.current->data.go(Next);
-			if (!Routes.current->data.isValid()) { break; }
-			B = Routes.current->data.getItem();
-			Routes.current->data.go(Back);
-			drawLine(window, A, B);
-			Routes.current->data.go(Next);
-		}
-
-		Routes.current->data.go(First);
-		while (Routes.current->data.isValid()) {
-			A = Routes.current->data.getItem();
-			drawPoint(window, A, circleRadius);
-			Routes.current->data.go(Next);
-		}
+		bool isVisible = Metadata.getItem().isVisible;
+		if (isVisible) { drawCurrentRoute(window); }
 		Routes.go(Next);
-		
+		Metadata.go(Next);
 	}
 
 	Routes.current = temp;
@@ -138,6 +156,14 @@ void ListManager::newRoute() {
 	
 }
 
+void ListManager::showHide() {
+	Metadata.go(currentRoute);
+	RouteInfo toChange = Metadata.getItem();
+	if (toChange.isVisible) { toChange.isVisible = false; }
+	else { toChange.isVisible = true; }
+	Metadata.setItem(toChange);
+}
+
 int ListManager::collidingWith(UserInteraction& User) {
 	int toReturn = -1;
 
@@ -147,7 +173,7 @@ int ListManager::collidingWith(UserInteraction& User) {
 	
 	Routes.current->data.go(First);
 	while (Routes.current->data.isValid()) {
-		if (Routes.current->data.getItem().isTouching(User, circleRadius)) { toReturn = inPosition; }
+		if (Routes.current->data.getItem().isTouching(User, circleRadius+5)) { toReturn = inPosition; }
 		Routes.current->data.go(Next);
 		inPosition++;
 		
