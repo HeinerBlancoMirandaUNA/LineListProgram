@@ -12,14 +12,18 @@ private:
 	static const int circleRadius = 10;
 	sf::RectangleShape line;
 	sf::CircleShape circle;
+	int gotoX, gotoY, timer;
+	
+	void updateMapPosition();
 	void drawPoint(sf::RenderWindow& window, Point A, int radius);
-	void drawLine(sf::RenderWindow& window, Point A, Point B);
+	void drawLine(sf::RenderWindow& window, Point A, Point B, int lineRadius);
 	void drawCurrentRoute(sf::RenderWindow& window);
 
 public:
 	ListManager();
 	virtual ~ListManager();
 	int currentRoute;
+	float xMap, yMap;
 	DoublyLinkedList<DoublyLinkedList<Point>> Routes;
 	DoublyLinkedList<RouteInfo> Metadata;
 	void renderList(sf::RenderWindow &window);
@@ -30,6 +34,7 @@ public:
 	void newRoute();
 	void showHide();
 	void undoPoint();
+	void moveMap(int moveToX, int moveToY, int movTimer);
 	int collidingWith(UserInteraction& User);
 
 };

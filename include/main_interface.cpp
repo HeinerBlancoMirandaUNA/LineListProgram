@@ -5,6 +5,10 @@ MainInterface::MainInterface(sf::RenderWindow& window) {
 	dragPoint = false;
 	lastPointPosition = 1;
 	srand(time(NULL));
+	Map.setScale(2, 2);
+	Texture.setSmooth(true);
+	Texture.loadFromFile("./resources/CrMap.png");
+	Map.setTexture(Texture);
 }
 
 MainInterface:: ~MainInterface() {
@@ -37,7 +41,10 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	int action = -1;
 	if (Form == Hide) { 
 		if (!dragPoint) { lastPointPosition = collidingWith(User); }
-		lastPoint.x = User.x; lastPoint.y = User.y;
+		lastPoint.x = static_cast<int>(User.x -xMap);
+		lastPoint.y = static_cast<int>(User.y -yMap);
+		lastCenterX = User.centerXdist;
+		lastCenterY = User.centerYdist;
 		return; 
 	}
 
@@ -72,25 +79,29 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		
 		string firstOption = "Agregar punto";
 		if (lastPointPosition > 0) { firstOption = "Borrar punto"; }
-		action = Menu(window, { firstOption , "Borrar último" , showOrHide ,"Renombrar","Cambiar color...","Nueva ruta","Borrar ruta"});
+		action = Menu(window, { "Ir aqui", firstOption , "Borrar último" , showOrHide ,"Renombrar","Cambiar color...","Nueva ruta","Borrar ruta"});
 		User.clickL = false;
 
 		if (action == 0) {
+			moveMap(((xMap - 0) + lastCenterX) + Deco.xSize / 2, yMap + lastCenterY, 60);
+		}
+		if (action == 1) {
 			if (lastPointPosition > 0) { delPoint(lastPointPosition);  }
 			else { addPoint(lastPoint); }
 		}
-		if (action == 1) { undoPoint(); }
-		if (action == 2) { 
+		if (action == 2) { undoPoint(); }
+		if (action == 3) { 
 			showHide();
 		}
-		if (action == 3) { 
+		if (action == 4) { 
 			Metadata.go(currentRoute);
 			RenameInput.label = Metadata.getItem().name;
 			Form = Rename;
 		}
-		if (action == 4) {	Form = ColorSelector; }
-		if (action == 5) { newRoute(); }
-		if (action == 6) { delRoute(); }
+		if (action == 5) {	Form = ColorSelector; }
+		if (action == 6) { newRoute(); }
+		if (action == 7) { delRoute(); }
+		
 
 		return;
 	}
@@ -172,6 +183,8 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 void MainInterface::update(sf::RenderWindow& window) {
 
+	Map.setPosition(xMap,yMap);
+	window.draw(Map);
 	renderList(window);
 
 	Metadata.go(currentRoute);	bool currentIsVisible = Metadata.getItem().isVisible;

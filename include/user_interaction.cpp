@@ -1,4 +1,5 @@
 #include "user_interaction.h"
+#include <iostream>
 
 UserInteraction::UserInteraction() {
     clickL = false;
@@ -10,6 +11,8 @@ UserInteraction::UserInteraction() {
     key = 0;
     width = 100;
     height = 100;
+    centerXdist = 100;
+    centerYdist = 100;
 }
 
 UserInteraction::~UserInteraction() {
@@ -45,12 +48,14 @@ void UserInteraction::update(sf::RenderWindow& window) {
     width = static_cast<float>(window.getSize().x);
     height = static_cast<float>(window.getSize().y);
     timer = clock.getElapsedTime().asMilliseconds();
-    
+
     sf::Vector2f mousePosition;
     mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     x = mousePosition.x;
     y = mousePosition.y;
-    
+    centerXdist =  (width / 2) -x;
+    centerYdist = (height / 2) -y;
+
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed) { window.close(); }

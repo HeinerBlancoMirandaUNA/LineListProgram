@@ -3,6 +3,11 @@
 ListManager::ListManager() {
 	newRoute();
 	currentRoute = 1;
+	xMap = 0;
+	yMap = 0;
+	gotoX = 0;
+	gotoY = 0;
+	timer = 0;
 }
 
 ListManager::~ListManager() {
@@ -21,14 +26,16 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 	circle.setPosition(Ax, Ay);
 	circle.move(-circle.getRadius(), -circle.getRadius());
 	
-	circle.setFillColor(sf::Color(45,0,45));
+	circle.setFillColor(sf::Color(45,0,45,90));
+	circle.move(2, 2); 
 	window.draw(circle);
+	circle.move(-2, -2);
 	circle.setFillColor(currentColor);
 	circle.setRadius(circle.getRadius() -1);
 	window.draw(circle);
 
-	circle.setFillColor(sf::Color(255,255,230,230));
-	circle.setRadius(circle.getRadius() / 4);
+	circle.setFillColor(sf::Color(255,255,230,255));
+	circle.setRadius(circle.getRadius() / 3.5);
 	circle.setScale(0.75, 1.25);
 	circle.move(circle.getRadius() * 1.25, circle.getRadius());
 	window.draw(circle);
@@ -36,7 +43,7 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 	circle.setFillColor(currentColor);
 }
 
-void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
+void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B, int lineRadius) {
 	
 	float Ax = static_cast<float>(A.x);
 	float Ay = static_cast<float>(A.y);
@@ -58,10 +65,27 @@ void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 	distX = distX * distX;
 	distY = distY * distY;
 	float distance = sqrt(distX + distY);
-	line.setSize(sf::Vector2f(distance,5));
-	line.setOrigin(0, line.getSize().y/2);
 	line.setRotation(angle);
+
+	line.setSize(sf::Vector2f(distance, lineRadius ));
+	line.setOrigin(0, line.getSize().y/2);
 	window.draw(line);
+
+}
+
+void ListManager::moveMap(int moveToX, int moveToY, int movTimer) {
+	gotoX = moveToX;
+	gotoY = moveToY;
+	timer = movTimer;
+}
+
+void ListManager::updateMapPosition() {
+	if (timer < 1) { return; }
+	float acceleration = timer * 0.1;
+	xMap = xMap + (((gotoX - xMap)) / acceleration);
+	yMap = yMap + (((gotoY - yMap)) / acceleration);
+	timer--;
+	if (timer < 1) { xMap = gotoX;  yMap = gotoY; }
 }
 
 void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
@@ -75,12 +99,13 @@ void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
 
 	
 	if (currentRoute == Routes.position()) {
-		if (lineLigth > 50) { lineLigth = lineLigth - 7; }
-		if (lineLigth <= 50) { lineLigth = 50; }
+		if (lineLigth < 255) { lineLigth = lineLigth + 7; }
+		if (lineLigth >= 255) { lineLigth = 255; }
+		
 	}
 	else {
-		if (lineLigth < 200) { lineLigth = lineLigth + 7; }
-		if (lineLigth >= 200) { lineLigth = 200; }
+		if (lineLigth > 50) { lineLigth = lineLigth - 7; }
+		if (lineLigth <= 50) { lineLigth = 50; }
 	}
 
 	Point A, B;
@@ -91,16 +116,19 @@ void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
 		if (!Routes.current->data.isValid()) { break; }
 		B = Routes.current->data.getItem();
 		Routes.current->data.go(Back);
-		line.setFillColor(currentColor);
-		drawLine(window, A, B);
-		line.setFillColor((sf::Color(0, 0, 0, light)));
-		drawLine(window, A, B);
+		A.x = xMap + A.x; A.y = yMap + A.y;
+		B.x = xMap + B.x; B.y = yMap + B.y;
+		line.setFillColor((sf::Color(0, 0, 0, 80)));
+		drawLine(window, A, B, circleRadius);
+		line.setFillColor(sf::Color(currentColor.r, currentColor.g, currentColor.b,light));
+		drawLine(window, A, B, circleRadius - 5);
 		Routes.current->data.go(Next);
 	}
 
 	Routes.current->data.go(First);
 	while (Routes.current->data.isValid()) {
 		A = Routes.current->data.getItem();
+		A.x = xMap+A.x; A.y = yMap + A.y;
 		circle.setFillColor(currentColor);
 		if (currentRoute == Routes.position()) { drawPoint(window, A, circleRadius); }
 		else { drawPoint(window, A, circleRadius/2); }
@@ -123,6 +151,7 @@ void ListManager::renderList(sf::RenderWindow& window) {
 	Metadata.go(currentRoute);
 	drawCurrentRoute(window);
 	Routes.current = nullptr;
+	updateMapPosition();
 
 }
 
@@ -145,6 +174,7 @@ void ListManager::setPoint(sf::RenderWindow& window,int thisPosition, Point A) {
 	if (!Routes.isValid()) { return; }
 	Routes.current->data.go(thisPosition);
 	Routes.current->data.setItem(A);
+	A.x = xMap + A.x; A.y = yMap + A.y;
 	drawPoint(window, A, 20);
 }
 
@@ -188,7 +218,9 @@ int ListManager::collidingWith(UserInteraction& User) {
 	
 	Routes.current->data.go(First);
 	while (Routes.current->data.isValid()) {
-		if (Routes.current->data.getItem().isTouching(User, circleRadius+5)) { toReturn = inPosition; }
+		Point A = Routes.current->data.getItem();
+		A.x = xMap + A.x; A.y = yMap + A.y;
+		if (A.isTouching(User, circleRadius+5)) { toReturn = inPosition; }
 		Routes.current->data.go(Next);
 		inPosition++;		
 	}

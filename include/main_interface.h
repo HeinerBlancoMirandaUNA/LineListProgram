@@ -15,7 +15,9 @@ private:
 	bool dragPoint;
 	void displayForm(sf::RenderWindow& window);
 	void routeSelector(sf::RenderWindow& window);
-	//
+	int lastCenterX, lastCenterY;
 	Box RouteItem;
+	sf::Sprite Map;
+	sf::Texture Texture;
 };
 

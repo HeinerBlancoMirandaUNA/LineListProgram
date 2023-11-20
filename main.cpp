@@ -9,7 +9,7 @@ int main()
       
     while (window.isOpen()) {
         
-        window.clear(sf::Color::Blue);
+        window.clear(sf::Color(126,164,255));
         UI.update(window);        
         window.display();
 

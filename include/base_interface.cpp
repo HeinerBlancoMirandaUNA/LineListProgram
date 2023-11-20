@@ -47,6 +47,14 @@ int BaseInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 	float height = 0;
 	bool highlightOnce = true; 
 
+	if (WindowForm.x + WindowForm.xSize > User.width) {
+		WindowForm.x = User.x - WindowForm.xSize;
+	}
+
+	if (WindowForm.y + WindowForm.ySize > User.height) {
+		WindowForm.y = User.y - WindowForm.ySize;
+	}
+
 	for (string thisItem : arguments) {
 		Button.button(" " + thisItem);
 		if (Button.labelWidth() > maxWidth) { maxWidth = Button.labelWidth(); }
