@@ -13,6 +13,8 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 
 	float Ax = static_cast<float>(A.x);
 	float Ay = static_cast<float>(A.y);
+
+	sf::Color currentColor(circle.getFillColor());
 	
 	circle.setScale(1,1);
 	circle.setRadius(radius);
@@ -21,7 +23,7 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 	
 	circle.setFillColor(sf::Color(45,0,45));
 	window.draw(circle);
-	circle.setFillColor(sf::Color::Red);
+	circle.setFillColor(currentColor);
 	circle.setRadius(circle.getRadius() -1);
 	window.draw(circle);
 
@@ -30,7 +32,8 @@ void ListManager::drawPoint(sf::RenderWindow& window, Point A, int radius) {
 	circle.setScale(0.75, 1.25);
 	circle.move(circle.getRadius() * 1.25, circle.getRadius());
 	window.draw(circle);
-	circle.setFillColor(sf::Color::White);
+
+	circle.setFillColor(currentColor);
 }
 
 void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
@@ -63,19 +66,24 @@ void ListManager::drawLine(sf::RenderWindow& window, Point A, Point B) {
 
 void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
 	if (!Routes.isValid()) { return; }
-	Point A, B;
+	
 	int& lineLigth = Metadata.current->data.lineLight;
-	sf::Uint8 ligth = lineLigth;
-	line.setFillColor((sf::Color(ligth, ligth, ligth)));
+	if (!Metadata.current->data.isVisible) { lineLigth = 255; return; }
+
+	sf::Uint8 light = lineLigth;
+	sf::Color currentColor = Metadata.current->data.getColor();
+
+	
 	if (currentRoute == Routes.position()) {
-		if (lineLigth < 255) { lineLigth = lineLigth + 10; }
-		if (lineLigth >= 255) { lineLigth = 255; }
+		if (lineLigth > 50) { lineLigth = lineLigth - 7; }
+		if (lineLigth <= 50) { lineLigth = 50; }
 	}
 	else {
-		if (lineLigth > 0) { lineLigth = lineLigth - 10; }
-		if (lineLigth <= 0) { lineLigth = 0; }
+		if (lineLigth < 200) { lineLigth = lineLigth + 7; }
+		if (lineLigth >= 200) { lineLigth = 200; }
 	}
 
+	Point A, B;
 	Routes.current->data.go(First);
 	while (Routes.current->data.isValid() && Routes.current->data.getSize() > 1) {
 		A = Routes.current->data.getItem();
@@ -83,6 +91,9 @@ void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
 		if (!Routes.current->data.isValid()) { break; }
 		B = Routes.current->data.getItem();
 		Routes.current->data.go(Back);
+		line.setFillColor(currentColor);
+		drawLine(window, A, B);
+		line.setFillColor((sf::Color(0, 0, 0, light)));
 		drawLine(window, A, B);
 		Routes.current->data.go(Next);
 	}
@@ -90,7 +101,9 @@ void ListManager::drawCurrentRoute(sf::RenderWindow& window) {
 	Routes.current->data.go(First);
 	while (Routes.current->data.isValid()) {
 		A = Routes.current->data.getItem();
-		drawPoint(window, A, circleRadius);
+		circle.setFillColor(currentColor);
+		if (currentRoute == Routes.position()) { drawPoint(window, A, circleRadius); }
+		else { drawPoint(window, A, circleRadius/2); }
 		Routes.current->data.go(Next);
 	}
 }
@@ -101,13 +114,15 @@ void ListManager::renderList(sf::RenderWindow& window) {
 	Routes.go(First);
 	Metadata.go(First);
 	while (Routes.isValid()) {
-		bool isVisible = Metadata.getItem().isVisible;
-		if (isVisible) { drawCurrentRoute(window); }
+		if (true) { drawCurrentRoute(window); }
 		Routes.go(Next);
 		Metadata.go(Next);
 	}
 
-	Routes.current = temp;
+	Routes.go(currentRoute);
+	Metadata.go(currentRoute);
+	drawCurrentRoute(window);
+	Routes.current = nullptr;
 
 }
 
@@ -175,8 +190,7 @@ int ListManager::collidingWith(UserInteraction& User) {
 	while (Routes.current->data.isValid()) {
 		if (Routes.current->data.getItem().isTouching(User, circleRadius+5)) { toReturn = inPosition; }
 		Routes.current->data.go(Next);
-		inPosition++;
-		
+		inPosition++;		
 	}
 	
 	Routes.go(Next);

@@ -4,6 +4,7 @@ MainInterface::MainInterface(sf::RenderWindow& window) {
 	resetInterface(window);
 	dragPoint = false;
 	lastPointPosition = 1;
+	srand(time(NULL));
 }
 
 MainInterface:: ~MainInterface() {
@@ -12,8 +13,7 @@ MainInterface:: ~MainInterface() {
 
 void MainInterface::routeSelector(sf::RenderWindow& window) {
 	RouteItem.press();
-	RouteItem.setPressedColor(accent);
-	RouteItem.forceWhite();
+	//RouteItem.forceWhite();
 	float spacing = 5;
 	RouteItem.x = Deco.x + spacing;
 	RouteItem.y = Deco.y + spacing;
@@ -22,14 +22,43 @@ void MainInterface::routeSelector(sf::RenderWindow& window) {
 	Metadata.go(First);
 	while (Metadata.isValid()) {
 		RouteItem.release();
+		RouteItem.setPressedColor(Metadata.getItem().getColor());
 		if (RouteItem.isTouching(User) && User.clickL) { currentRoute = Metadata.position(); User.clickL = false; }
 		if (Metadata.position() == currentRoute) { RouteItem.press(); }
 		RouteItem.label = Metadata.getItem().name;
 		RouteItem.draw(window);
 		RouteItem.y = RouteItem.y + (RouteItem.ySize + spacing);
 		Metadata.go(Next);
-		
 	}
+}
+
+sf::Color MainInterface::drawColorPicker(sf::RenderWindow& window) {
+	ColorPick.press();
+	float resetX = WindowForm.x + 10;
+	ColorPick.x = resetX;
+	ColorPick.y = WindowForm.y + 40;
+	ColorPick.xSize = 20; ColorPick.ySize = 20;
+	int red = 0; int green = 0; int blue = 0;
+
+	sf::Color toReturn(sf::Color::Black);
+
+	for (int y = 0; y < 5; y++) {
+		red = red + 42;
+		
+		for (int x = 0; x < 18; x++) {
+			blue = blue + 42;
+			sf::Color option(red, green, blue % 255);
+			ColorPick.setPressedColor(option);
+			ColorPick.draw(window);
+			if (ColorPick.isTouching(User) && User.clickL) { toReturn = option; }
+			if (x % 6 == 0) { green = green + 85; }
+			ColorPick.x = ColorPick.x + ColorPick.xSize;
+		}
+		ColorPick.x = resetX; green = 0;
+		ColorPick.y = ColorPick.y + ColorPick.ySize;
+	}
+	
+	return toReturn;
 }
 
 void MainInterface::displayForm(sf::RenderWindow& window) {
@@ -78,7 +107,7 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	bool isInput = Form == OpenFile || Form == SaveFile || Form == Rename;
 	if (isInput) { adjustWindow(440, 110); }
 	if (Form == InfoDialog) { adjustWindow(400, 130); }
-	if (Form == ColorSelector) { adjustWindow(400, 200); }
+	if (Form == ColorSelector) { adjustWindow(380, 180); }
 
 	float tX = WindowForm.x + 5;
 	float tY = WindowForm.y + WindowForm.ySize - 30;
@@ -121,8 +150,25 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	}
 
 	if (Form == ColorSelector) {
-		Title.label = "Seleccione un nuevo color";
-		action = Toolbar(window, tX, tY, { "Cambiar color" , "Cancelar" });
+		Title.label = "Seleccione un color";
+		action = Toolbar(window, tX, tY, { "Listo", "Al azar"});
+		sf::Color NewColor(drawColorPicker(window));
+
+		if (NewColor != sf::Color::Black) {
+			Metadata.go(currentRoute);
+			RouteInfo toReplace = Metadata.getItem();
+			toReplace.setColor(NewColor);
+			Metadata.setItem(toReplace);
+		}
+
+		if (action == 1) { 
+			Metadata.go(currentRoute);
+			RouteInfo toReplace = Metadata.getItem();
+			sf::Color random(rand() % 255, rand() % 255, rand() % 255);
+			toReplace.setColor(random);
+			Metadata.setItem(toReplace);
+		}
+		
 	}
 
 	if (action > -1) { Form = Hide; }

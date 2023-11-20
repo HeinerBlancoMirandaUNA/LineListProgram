@@ -13,5 +13,8 @@ public:
 	sf::Uint8 red, green, blue, line;
 	bool isVisible;
 
+	sf::Color getColor();
+	void setColor(sf::Color thisColor);
+
 };
 

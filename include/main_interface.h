@@ -15,6 +15,7 @@ private:
 	bool dragPoint;
 	void displayForm(sf::RenderWindow& window);
 	void routeSelector(sf::RenderWindow& window);
-	Box RouteItem;
+	sf::Color drawColorPicker(sf::RenderWindow& window);
+	Box RouteItem, ColorPick;
 };
 
