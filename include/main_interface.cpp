@@ -9,6 +9,7 @@ MainInterface::MainInterface(sf::RenderWindow& window) {
 	Texture.setSmooth(true);
 	Texture.loadFromFile("./resources/CrMap.png");
 	Map.setTexture(Texture);
+	FileInput.label = "NuevaLista.rdl";
 }
 
 MainInterface:: ~MainInterface() {
@@ -17,19 +18,25 @@ MainInterface:: ~MainInterface() {
 
 void MainInterface::routeSelector(sf::RenderWindow& window) {
 	RouteItem.press();
-	//RouteItem.forceWhite();
 	float spacing = 5;
 	RouteItem.x = Deco.x + spacing;
 	RouteItem.y = Deco.y + spacing;
 	RouteItem.xSize = Deco.xSize - (spacing*2);
+	RouteItem.autoAdjust = false;
 
 	Metadata.go(First);
 	while (Metadata.isValid()) {
 		RouteItem.release();
 		RouteItem.setPressedColor(Metadata.getItem().getColor());
-		if (RouteItem.isTouching(User) && User.clickL) { currentRoute = Metadata.position(); User.clickL = false; }
+		if (RouteItem.isTouching(User) && (User.clickL || User.clickR))
+		{
+			currentRoute = Metadata.position(); User.clickL = false;
+		}
 		if (Metadata.position() == currentRoute) { RouteItem.press(); }
 		RouteItem.label = Metadata.getItem().name;
+		if (!Metadata.getItem().isVisible) {
+			RouteItem.label = RouteItem.label + "[" + char(33) + "]";
+		}
 		RouteItem.draw(window);
 		RouteItem.y = RouteItem.y + (RouteItem.ySize + spacing);
 		Metadata.go(Next);
@@ -43,7 +50,7 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		if (!dragPoint) { lastPointPosition = collidingWith(User); }
 		lastPoint.x = static_cast<int>(User.x -xMap);
 		lastPoint.y = static_cast<int>(User.y -yMap);
-		lastCenterX = User.centerXdist;
+		lastCenterX = User.centerXdist + (Deco.xSize / 2);
 		lastCenterY = User.centerYdist;
 		return; 
 	}
@@ -62,15 +69,20 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 	}
 
 	if (Form == MenuSidebar) {
-		action = Menu(window, { "Renombrar","Cambiar color...","Nueva ruta","Borrar ruta" });
-		if (action == 0) {
+		action = Menu(window, { "Ir a cola", "Ir a cabeza", showOrHide ,"Renombrar","Cambiar color...","Nueva ruta","Borrar ruta"});
+		
+		if (action == 0) { moveMapToPoint(Last, lastCenterX, lastCenterY); }
+		if (action == 1) { moveMapToPoint(First, lastCenterX, lastCenterY); }
+		if (action == 2) { showHide(); }
+		if (action == 3) {
 			Metadata.go(currentRoute);
 			RenameInput.label = Metadata.getItem().name;
 			Form = Rename;
 		}
-		if (action == 1) { Form = ColorSelector; }
-		if (action == 2) { newRoute(); }
-		if (action == 3) { delRoute(); }
+		if (action == 4) { Form = ColorSelector; }
+		if (action == 5) { newRoute(); }
+		if (action == 6) { delRoute(); }
+		
 		User.clickL = false;
 		return;
 	}
@@ -83,16 +95,14 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		User.clickL = false;
 
 		if (action == 0) {
-			moveMap(((xMap - 0) + lastCenterX) + Deco.xSize / 2, yMap + lastCenterY, 60);
+			moveMap(xMap + lastCenterX, yMap + lastCenterY, 60);
 		}
 		if (action == 1) {
 			if (lastPointPosition > 0) { delPoint(lastPointPosition);  }
 			else { addPoint(lastPoint); }
 		}
 		if (action == 2) { undoPoint(); }
-		if (action == 3) { 
-			showHide();
-		}
+		if (action == 3) { 	showHide(); }
 		if (action == 4) { 
 			Metadata.go(currentRoute);
 			RenameInput.label = Metadata.getItem().name;
@@ -101,7 +111,6 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		if (action == 5) {	Form = ColorSelector; }
 		if (action == 6) { newRoute(); }
 		if (action == 7) { delRoute(); }
-		
 
 		return;
 	}
@@ -122,7 +131,21 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, { "Abrir","Cancelar" });
 		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
-		if (action == 0) { tellUser("Error", "El archivo especificado no tiene un formato válido."); return; }
+		if (action == 0) { 
+			int error = readFile(FileInput.label);
+			std::cout << error;
+			if (error == 0) {
+				loadList();
+			}
+			if (error == -1) {
+				tellUser("Error", "No se pudo encontrar el archivo especificado");
+				return;
+			}
+			if (error == -2) {
+				tellUser("Error", "El archivo especificado no tiene un formato válido o es incompatible con esta version del programa."); 
+				return;
+			}
+		}
 	}
 
 	if (Form == SaveFile) {
@@ -130,7 +153,10 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		action = Toolbar(window, tX, tY, { "Guardar","Cancelar" });
 		FileInput.textField(WindowForm, 68, User);
 		FileInput.draw(window);
-		if (action == 0) { tellUser("Error", "Hubo un problema al guardar el archivo. Intente guardar en otra ubicacion o pruebe un nombre de archivo distinto."); return; }
+		if (action == 0) {
+			saveList(FileInput.label);
+			//tellUser("Error", "Hubo un problema al guardar el archivo. Intente guardar en otra ubicacion o pruebe un nombre de archivo distinto."); return; 
+		}
 	}
 
 	if (Form == InfoDialog) {

@@ -47,14 +47,6 @@ int BaseInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 	float height = 0;
 	bool highlightOnce = true; 
 
-	if (WindowForm.x + WindowForm.xSize > User.width) {
-		WindowForm.x = User.x - WindowForm.xSize;
-	}
-
-	if (WindowForm.y + WindowForm.ySize > User.height) {
-		WindowForm.y = User.y - WindowForm.ySize;
-	}
-
 	for (string thisItem : arguments) {
 		Button.button(" " + thisItem);
 		if (Button.labelWidth() > maxWidth) { maxWidth = Button.labelWidth(); }
@@ -63,6 +55,13 @@ int BaseInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 	Button.xSize = maxWidth;
 	
 	WindowForm.xSize = maxWidth; WindowForm.ySize = height+3;
+	if (WindowForm.x + WindowForm.xSize > User.width) {
+		WindowForm.x = User.x - WindowForm.xSize;
+	}
+
+	if (WindowForm.y + WindowForm.ySize > User.height) {
+		WindowForm.y = User.y - WindowForm.ySize;
+	}
 	WindowForm.draw(window);
 
 	Button.x = WindowForm.x; Button.y = WindowForm.y;
@@ -76,6 +75,7 @@ int BaseInterface::Menu(sf::RenderWindow& window, vector<string> arguments) {
 	}
 
 	if (User.clickL) { Form = Hide; }
+
 	return -1;
 
 }
@@ -145,7 +145,7 @@ bool BaseInterface::drawSidebars(sf::RenderWindow& window) {
 	toReturn = Deco.isTouching(User);
 
 	Deco.y = toolbarHeight;
-	Deco.xSize = 150; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
+	Deco.xSize = 175; Deco.ySize = User.height - toolbarHeight; Deco.draw(window);
 	if (!toReturn) { toReturn = Deco.isTouching(User); }
 	return toReturn;
 }

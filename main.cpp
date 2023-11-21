@@ -4,7 +4,7 @@
 int main()
 {
     
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Initializing...");  
+    sf::RenderWindow window(sf::VideoMode(800, 480), "Initializing...");  
     MainInterface UI(window);
       
     while (window.isOpen()) {

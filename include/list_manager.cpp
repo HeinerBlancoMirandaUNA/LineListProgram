@@ -79,6 +79,18 @@ void ListManager::moveMap(int moveToX, int moveToY, int movTimer) {
 	timer = movTimer;
 }
 
+void ListManager::moveMapToPoint(ListPosition here, int centerX, int centerY) {
+	Routes.go(currentRoute);
+	if (!Routes.isValid()) { return; }
+	Routes.current->data.go(here);
+	if (!Routes.current->data.isValid()) { return; }
+	moveMap(
+		( - Routes.current->data.getItem().x) + centerX,
+		( - Routes.current->data.getItem().y) + centerY,
+		60
+	);
+}
+
 void ListManager::updateMapPosition() {
 	if (timer < 1) { return; }
 	float acceleration = timer * 0.1;
@@ -230,3 +242,76 @@ int ListManager::collidingWith(UserInteraction& User) {
 
 }
 
+void ListManager::saveList(string filename) {
+	auto temp = Routes.current;
+
+	DoublyLinkedList<string> toSave;
+	RouteInfo thisList;
+	Point A;
+	toSave.add(Last, fileID);
+
+	Routes.go(First);
+	Metadata.go(First);
+	while (Routes.isValid()) {
+		thisList = Metadata.getItem();
+		toSave.add(Last, makeNew);
+		toSave.add(Last, thisList.name);
+		toSave.add(Last, to_string(thisList.red));
+		toSave.add(Last, to_string(thisList.green));
+		toSave.add(Last, to_string(thisList.blue));
+		toSave.add(Last, to_string(thisList.isVisible));
+
+		Routes.current->data.go(First);
+		while (Routes.current->data.isValid()) {
+			A = Routes.current->data.getItem();
+			toSave.add(Last, to_string(A.x));
+			toSave.add(Last, to_string(A.y));
+			Routes.current->data.go(Next);
+		}
+		Routes.go(Next);
+		Metadata.go(Next);
+
+	}
+
+	saveToFile(filename, toSave);
+	Routes.current = nullptr;
+}
+
+void ListManager::loadList() {
+	Routes.~DoublyLinkedList();
+	Metadata.~DoublyLinkedList();
+	
+	string item;
+	RouteInfo newInfo;
+	Point A;
+	FileContents.go(First);
+	while (FileContents.isValid()) {
+		item = FileContents.getItem();
+		if (item == makeNew) {
+			newRoute();
+			FileContents.del(First);
+			
+			item = FileContents.getItem(); FileContents.del(First);
+			newInfo.name = item;
+			item = FileContents.getItem(); FileContents.del(First);
+			newInfo.red = stoi(item);
+			item = FileContents.getItem(); FileContents.del(First);
+			newInfo.green = stoi(item);
+			item = FileContents.getItem(); FileContents.del(First);
+			newInfo.blue = stoi(item);
+			item = FileContents.getItem(); FileContents.del(First);
+			newInfo.isVisible = true;
+			if (item == "0") { newInfo.isVisible = false; }
+
+			Metadata.go(currentRoute);
+			Metadata.setItem(newInfo);
+		}
+		else {
+			A.x = stoi(FileContents.getItem()); FileContents.del(First);
+			A.y = stoi(FileContents.getItem()); FileContents.del(First);
+			addPoint(A);
+		}
+
+
+	}
+}

@@ -1,28 +1,25 @@
 #pragma once
 #include <fstream>
 #include <iostream>
-#include <vector>
 #include <string>
+#include "doubly_linked_list.h"
 using std::string;
-using std::vector;
 using std::ifstream; 
 using std::ofstream;
-
+using std::to_string;
 
 class FileLoadAndSave
 {
 public:
 	FileLoadAndSave();
 	~FileLoadAndSave();
-	string filename;
-	vector<string> fileContents;
+	DoublyLinkedList<string> FileContents;
+	string fileID, makeNew;
 
-	bool fileIsLoaded();
-	void readFile(string thisFile);
-	void saveToFile(string thisFile, vector<string> data);
+	int readFile(string thisFile);
+	void saveToFile(string thisFile, DoublyLinkedList<string>& Data);
 
 private:
-	bool fileReady;
 	void resetData();
 };
 

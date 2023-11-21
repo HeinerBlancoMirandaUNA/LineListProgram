@@ -1,11 +1,12 @@
 #pragma once
-#include "doubly_linked_list.h"
+
 #include "point.h"
 #include "math.h"
 #include "route_info.h"
+#include "file_load_and_save.h"
 #include <SFML/Graphics.hpp>
 
-class ListManager
+class ListManager : public FileLoadAndSave
 {
 private:
 
@@ -35,6 +36,9 @@ public:
 	void showHide();
 	void undoPoint();
 	void moveMap(int moveToX, int moveToY, int movTimer);
+	void moveMapToPoint(ListPosition here, int centerX, int centerY);
+	void saveList(string filename);
+	void loadList();
 	int collidingWith(UserInteraction& User);
 
 };

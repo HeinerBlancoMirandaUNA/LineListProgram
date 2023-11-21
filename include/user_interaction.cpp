@@ -53,8 +53,8 @@ void UserInteraction::update(sf::RenderWindow& window) {
     mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     x = mousePosition.x;
     y = mousePosition.y;
-    centerXdist =  (width / 2) -x;
-    centerYdist = (height / 2) -y;
+    centerXdist = (width / 2) - x;
+    centerYdist = (height / 2) - y;
 
     while (window.pollEvent(event))
     {
