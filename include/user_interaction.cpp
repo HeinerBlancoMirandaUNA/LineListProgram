@@ -32,10 +32,10 @@ void UserInteraction::textInput() {
     if (event.type == sf::Event::TextEntered) {
         key = static_cast<char>(event.text.unicode);
     }
-
     // Backspace key = 8
     // Intro key = 13
     // Nothing = 0
+
 }
 
 void UserInteraction::update(sf::RenderWindow& window) {

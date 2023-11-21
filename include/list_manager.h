@@ -25,8 +25,8 @@ protected:
 	virtual ~ListManager();
 	int currentRoute;
 	float xMap, yMap;
-	DoublyLinkedList<DoublyLinkedList<Point>> Routes;
-	DoublyLinkedList<RouteInfo> Metadata;
+	LinkedList<LinkedList<Point>> Routes;
+	LinkedList<RouteInfo> Metadata;
 	void renderList(sf::RenderWindow &window);
 	void addPoint(Point A);
 	void delPoint(int thisPosition);

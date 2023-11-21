@@ -164,7 +164,6 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		FileInput.draw(window);
 		if (action == 0) {
 			saveList(FileInput.label);
-			//tellUser("Error", "Hubo un problema al guardar el archivo. Intente guardar en otra ubicacion o pruebe un nombre de archivo distinto."); return; 
 		}
 	}
 

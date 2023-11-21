@@ -11,7 +11,7 @@ FileLoadAndSave::~FileLoadAndSave() {
 }
 
 void FileLoadAndSave::resetData() {
-	FileContents.~DoublyLinkedList();
+	FileContents.~LinkedList();
 }
 
 int FileLoadAndSave::readFile(string thisFile) {
@@ -38,7 +38,7 @@ int FileLoadAndSave::readFile(string thisFile) {
 	return 0;
 }
 
-void FileLoadAndSave::saveToFile(string thisFile, DoublyLinkedList<string>& Data) {
+void FileLoadAndSave::saveToFile(string thisFile, LinkedList<string>& Data) {
 
 	ofstream File(thisFile.c_str());
 

@@ -13,11 +13,11 @@ class FileLoadAndSave
 protected:
 	FileLoadAndSave();
 	~FileLoadAndSave();
-	DoublyLinkedList<string> FileContents;
+	LinkedList<string> FileContents;
 	string fileID, makeNew;
 
 	int readFile(string thisFile);
-	void saveToFile(string thisFile, DoublyLinkedList<string>& Data);
+	void saveToFile(string thisFile, LinkedList<string>& Data);
 
 private:
 	void resetData();

@@ -11,7 +11,7 @@ enum ListPosition {
 };
 
 template <typename T>
-class DoublyLinkedList {
+class LinkedList {
 private:
     Node<T>* head;
     Node<T>* tail;
@@ -51,13 +51,12 @@ private:
     }
 
 public:
-    DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {
+    LinkedList() : head(nullptr), tail(nullptr), current(nullptr) {
         listSize = 0;
         currentPosition = 0;
-        //std::cout << "!!!!!ListCreated" ;
     }
 
-    virtual ~DoublyLinkedList() {
+    virtual ~LinkedList() {
         while(!isEmpty()) {
             del(1);
         }

@@ -245,7 +245,7 @@ int ListManager::collidingWith(UserInteraction& User) {
 void ListManager::saveList(string filename) {
 	auto temp = Routes.current;
 
-	DoublyLinkedList<string> toSave;
+	LinkedList<string> toSave;
 	RouteInfo thisList;
 	Point A;
 	toSave.add(Last, fileID);
@@ -278,8 +278,8 @@ void ListManager::saveList(string filename) {
 }
 
 void ListManager::loadList() {
-	Routes.~DoublyLinkedList();
-	Metadata.~DoublyLinkedList();
+	Routes.~LinkedList();
+	Metadata.~LinkedList();
 	
 	string item;
 	RouteInfo newInfo;

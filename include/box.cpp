@@ -13,7 +13,6 @@ Box::Box() {
 	text.setCharacterSize(16);
 	pressedColor = biselB;
 	forceWhiteText = false;
-	//std::cout << ">>> New Box Created" << std::endl;
 	
 }
 
@@ -245,7 +244,7 @@ void Box::draw(sf::RenderWindow& window) {
 	}
 
 	text.setPosition(x + 5, y);
-	//linesDrawn = 0;
+
 	if (textWrap) {
 		
 		adjustTextWrap(window, label);
