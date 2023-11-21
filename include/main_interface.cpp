@@ -7,7 +7,7 @@ MainInterface::MainInterface(sf::RenderWindow& window) {
 	srand(time(NULL));
 	Map.setScale(2, 2);
 	Texture.setSmooth(true);
-	Texture.loadFromFile("./resources/CrMap.png");
+	Texture.loadFromFile("./resources/Map.png");
 	Map.setTexture(Texture);
 	FileInput.label = "NuevaLista.rdl";
 }
