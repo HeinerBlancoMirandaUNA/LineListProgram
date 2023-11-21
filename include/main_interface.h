@@ -19,5 +19,6 @@ private:
 	Box RouteItem;
 	sf::Sprite Map;
 	sf::Texture Texture;
+	sf::Color lastColor;
 };
 

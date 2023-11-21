@@ -10,7 +10,7 @@ using std::to_string;
 
 class FileLoadAndSave
 {
-public:
+protected:
 	FileLoadAndSave();
 	~FileLoadAndSave();
 	DoublyLinkedList<string> FileContents;

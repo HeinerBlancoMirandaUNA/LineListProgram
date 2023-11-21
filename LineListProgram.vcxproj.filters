@@ -30,10 +30,16 @@
     <ClCompile Include="include\box.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="include\loader.cpp">
+    <ClCompile Include="include\list_manager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="include\main_interface.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="include\point.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="include\route_info.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,10 +59,19 @@
     <ClInclude Include="include\colors.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\loader.h">
+    <ClInclude Include="include\list_manager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\main_interface.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\doubly_linked_list.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\point.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\route_info.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

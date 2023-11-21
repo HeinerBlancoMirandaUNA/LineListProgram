@@ -135,8 +135,10 @@
   <ItemGroup>
     <ClCompile Include="include\box.cpp" />
     <ClCompile Include="include\file_load_and_save.cpp" />
-    <ClCompile Include="include\loader.cpp" />
+    <ClCompile Include="include\route_info.cpp" />
+    <ClCompile Include="include\list_manager.cpp" />
     <ClCompile Include="include\main_interface.cpp" />
+    <ClCompile Include="include\point.cpp" />
     <ClCompile Include="include\user_interaction.cpp" />
     <ClCompile Include="include\base_interface.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,9 +146,12 @@
   <ItemGroup>
     <ClInclude Include="include\box.h" />
     <ClInclude Include="include\colors.h" />
+    <ClInclude Include="include\doubly_linked_list.h" />
     <ClInclude Include="include\file_load_and_save.h" />
-    <ClInclude Include="include\loader.h" />
+    <ClInclude Include="include\route_info.h" />
+    <ClInclude Include="include\list_manager.h" />
     <ClInclude Include="include\main_interface.h" />
+    <ClInclude Include="include\point.h" />
     <ClInclude Include="include\user_interaction.h" />
     <ClInclude Include="include\base_interface.h" />
   </ItemGroup>

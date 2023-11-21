@@ -79,7 +79,11 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 			RenameInput.label = Metadata.getItem().name;
 			Form = Rename;
 		}
-		if (action == 4) { Form = ColorSelector; }
+		if (action == 4) {
+			Metadata.go(currentRoute);
+			lastColor = Metadata.getItem().getColor();
+			Form = ColorSelector;
+		}
 		if (action == 5) { newRoute(); }
 		if (action == 6) { delRoute(); }
 		
@@ -108,7 +112,11 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 			RenameInput.label = Metadata.getItem().name;
 			Form = Rename;
 		}
-		if (action == 5) {	Form = ColorSelector; }
+		if (action == 5) {
+			Metadata.go(currentRoute);
+			lastColor = Metadata.getItem().getColor();
+			Form = ColorSelector;
+		}
 		if (action == 6) { newRoute(); }
 		if (action == 7) { delRoute(); }
 
@@ -133,9 +141,10 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 		FileInput.draw(window);
 		if (action == 0) { 
 			int error = readFile(FileInput.label);
-			std::cout << error;
+
 			if (error == 0) {
 				loadList();
+				moveMapToPoint(Last, lastCenterX, lastCenterY);
 			}
 			if (error == -1) {
 				tellUser("Error", "No se pudo encontrar el archivo especificado");
@@ -181,21 +190,24 @@ void MainInterface::displayForm(sf::RenderWindow& window) {
 
 	if (Form == ColorSelector) {
 		Title.label = "Seleccione un color";
-		action = Toolbar(window, tX, tY, { "Listo", "Al azar"});
+		action = Toolbar(window, tX, tY, { "Aceptar", "Al azar", "Cancelar"});
 		sf::Color NewColor(colorPicker(window));
 
+		Metadata.go(currentRoute);
+		RouteInfo toReplace = Metadata.getItem();
 		if (NewColor != sf::Color::Black) {
-			Metadata.go(currentRoute);
-			RouteInfo toReplace = Metadata.getItem();
 			toReplace.setColor(NewColor);
 			Metadata.setItem(toReplace);
 		}
 
 		if (action == 1) { 
-			Metadata.go(currentRoute);
-			RouteInfo toReplace = Metadata.getItem();
 			sf::Color random(rand() % 255, rand() % 255, rand() % 255);
 			toReplace.setColor(random);
+			Metadata.setItem(toReplace);
+			return;
+		}
+		if (action == 2) {
+			toReplace.setColor(lastColor);
 			Metadata.setItem(toReplace);
 		}
 		

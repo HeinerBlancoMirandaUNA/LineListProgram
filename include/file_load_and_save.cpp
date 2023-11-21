@@ -29,14 +29,9 @@ int FileLoadAndSave::readFile(string thisFile) {
 		return -2;
 	}
 	
+	FileContents.go(First);
 	while (getline(File, currentLine)) {
 		FileContents.add(Last,currentLine);
-	}
-
-	FileContents.go(First);
-	while (FileContents.isValid()) {
-		std::cout << FileContents.getItem() << "\n";
-		FileContents.go(Next);
 	}
 
 	File.close();

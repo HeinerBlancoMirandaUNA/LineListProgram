@@ -20,7 +20,7 @@ private:
 	void drawLine(sf::RenderWindow& window, Point A, Point B, int lineRadius);
 	void drawCurrentRoute(sf::RenderWindow& window);
 
-public:
+protected:
 	ListManager();
 	virtual ~ListManager();
 	int currentRoute;

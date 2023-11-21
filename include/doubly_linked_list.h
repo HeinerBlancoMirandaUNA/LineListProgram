@@ -54,7 +54,7 @@ public:
     DoublyLinkedList() : head(nullptr), tail(nullptr), current(nullptr) {
         listSize = 0;
         currentPosition = 0;
-        std::cout << "!!!!!ListCreated" ;
+        //std::cout << "!!!!!ListCreated" ;
     }
 
     virtual ~DoublyLinkedList() {
